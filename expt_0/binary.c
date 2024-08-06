@@ -18,7 +18,6 @@ int main(int argc, char const *argv[])
     }
     int size = sizeof(ans) / sizeof(ans[0]);
     
-    int final[4];
     
     int reversedArr[size];
     for (int i = 0; i < size; i++) {
