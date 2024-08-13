@@ -6,7 +6,7 @@ class in_to_post
 {
     public:
         int top;
-        string output="                 ";
+        string output="                              ";
         int size = 20;
         char arr [20];
 
@@ -36,7 +36,7 @@ class in_to_post
             cout<<"is full"<<endl;
             return;
         }
-        
+        cout<<"pusihing "<<data<<endl;   
         top++;
         arr[top]=data;
         return;
@@ -53,6 +53,7 @@ class in_to_post
         {
             char data = arr[top];
             top--;
+            cout<<"popping "<<data<<endl;   
             return data;
         }
         
@@ -136,6 +137,7 @@ class in_to_post
                     output[j]=pop();
                     j++;
                     push(imput[i]);
+                    i++;
                 }            
                 
             }    
@@ -157,6 +159,8 @@ class in_to_post
 int main(int argc, char const *argv[])
 {
     in_to_post e1;
-    cout<<e1.convert("1+(1*2)")<<endl;
+    string i;
+    getline(cin,i);
+    cout<<e1.convert(i)<<endl;
     return 0;
 }
