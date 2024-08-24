@@ -46,24 +46,67 @@ void insert_all_pumps(struct node * head)
     }
 }
 
-int simulate (struct node * head)
+int length_of_cl(struct node *head)
 {
-    int initial_dist=0;
-    int current_fuel=0;
-    int remaining_dist=0;
-    struct node * ptr=head;
+    int length=0;
+    struct node * ptr = head;
     do
     {
-        ptr=ptr->next;
+        length++;
+        ptr = ptr->next;
+    }
+    while (ptr!=head);
+    printf("\n\n");
+    free(ptr);
+    return length;
+}
+
+void check_for_fuel(struct node * head,struct node * ptr_current,int pump_no)
+{
+    int current_fuel=0;
+    int distance_to_travel=0;
+    struct node * ptr = ptr_current;
+    do
+    {
         current_fuel+=ptr->petrol_at_station;
-        remaining_dist+=ptr->distance_to_next_node;
-        if (current_fuel-remaining_dist<0)
+        distance_to_travel+=ptr->distance_to_next_node;
+        if (current_fuel-distance_to_travel<=0)
         {
-            printf("TRIP NOT POSSIBLE");
+            printf("Trip not possible for pump no %d",pump_no);
+            free(ptr);
+            return;
         }
+        ptr=ptr->next;
         
-    } while (ptr->next!=head);
-    return initial_dist;
+    } while (ptr->next!=ptr_current);
+
+    if (ptr->next==ptr_current && ptr->petrol_at_station-ptr->distance_to_next_node<=0)
+    {
+        printf("Trip possible: for pump no %d",pump_no);
+        free(ptr);
+    }
+    else
+    {
+       printf("Trip not possible for pump no %d",pump_no);
+        free(ptr);
+        return; 
+    }
+    
+    
+}
+
+void simulate (struct node * head)
+{
+    int pump_no=0;
+    struct node * ptr=head;
+    for (int i = 0; i < length_of_cl(head)-1; i++)
+    {
+        ptr=ptr->next;
+        check_for_fuel(head,ptr,pump_no);
+        pump_no++;
+    }
+    
+    
 }
 
 void free_list(struct node* head)
@@ -83,24 +126,20 @@ void free_list(struct node* head)
 int main(int argc, char const *argv[])
 {
     struct node * head = (struct node *)malloc(sizeof(struct node));
-    int initial_fuel=0;
-    int initial_dist=0;
-    printf("Enter Initial fuel: \n");
-    scanf("%d",&initial_fuel);
-
     struct node * intial_location = (struct node *)malloc(sizeof(struct node));
     head->next=intial_location;
-    intial_location->petrol_at_station=initial_fuel;
-    //assuming
-    intial_location->distance_to_next_node=0;
-
     //to make circular
+    printf("Enter fuel you found at 1st pump: ");
+    scanf("%d",&intial_location->petrol_at_station);
+    printf("\n");
+    printf("Enter distance to next pump: ");
+    scanf("%d",&intial_location->distance_to_next_node);
+    printf("\n");
     intial_location->next=head;
 
 
     insert_all_pumps(head);
-    initial_fuel=simulate(head);
-    printf("Initial dist required is: %d",initial_dist);
+    simulate(head);
     free_list(head);
     return 0;
 }
