@@ -1,3 +1,11 @@
+typedef struct ListNode
+{
+    int data;
+    ListNode * next;
+}ListNode;
+
+#include <stdlib.h>
+
 class Solution {
 public:
 
