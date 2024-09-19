@@ -181,7 +181,7 @@ struct node * delete(struct node * root , int value)
         root->data=ipre->data;
         root->left= delete(root->left , ipre->data);
     }
-    printf("DEleting %d",root->data);
+    printf("Deleting %d",root->data);
     return root;
 }
 
