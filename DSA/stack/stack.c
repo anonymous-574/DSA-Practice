@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-struct stack
+typedef  struct stack
 {
     int top;
     int size;
     int * arr;
-};
+}stack;
 
-bool is_empty(struct stack * s)
+bool is_empty(  stack * s)
 {
     if (s->top==-1)
     {
@@ -19,7 +19,7 @@ bool is_empty(struct stack * s)
     return false;
 }
 
-bool is_full (struct stack *s)
+bool is_full (  stack *s)
 {
     // array starts from [0]
     if (s->top ==(s->size-1))
@@ -30,7 +30,7 @@ bool is_full (struct stack *s)
     return false;
 }
 
-void push(struct stack * s1, int data)
+void push(  stack * s1, int data)
 {
     if (is_full(s1))
     {
@@ -41,7 +41,7 @@ void push(struct stack * s1, int data)
     s1->arr[s1->top]=data;
 }
 
-int pop (struct stack * s)
+int pop (  stack * s)
 {
     if (is_empty(s))
     {
@@ -52,7 +52,7 @@ int pop (struct stack * s)
     return s->arr[s->top--];
 }
 
-int peek (struct stack * s , int idx)
+int peek (  stack * s , int idx)
 {
     if (s->top -idx +1<0)
     {
@@ -64,19 +64,19 @@ int peek (struct stack * s , int idx)
     return s->arr[s->top-idx+1];
 }
 
-int stack_top (struct stack *s)
+int stack_top (  stack *s)
 {
     return s->arr[s->top];
 }
 
-int stack_bottom (struct stack *s)
+int stack_bottom (  stack *s)
 {
     return s->arr[0];
 }
 
 int main(int argc, char const *argv[])
 {
-    struct stack *s= (struct stack *) malloc(sizeof (struct stack));
+      stack *s= (  stack *) malloc(sizeof (  stack));
     s->size=10;
     s->arr = (int *) malloc(s->size*sizeof(int));
     s->top=-1;

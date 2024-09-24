@@ -81,6 +81,55 @@ struct node * search(struct node * root, int key)
     }
 } 
 
+struct node * prev=NULL;
+struct node * search_for_l_r(struct node * root, int key)
+{
+    if (root==NULL)
+    {
+        return NULL;
+    }
+    if (root->data=key)
+    {
+        return root;
+    }
+    else if (root->data>key)
+    {
+        prev=root;
+        search(root->left,key);
+    }
+    else
+    {
+        prev=root;
+        search(root->right,key);
+    }
+} 
+// this function returns the NODE that is found 
+
+// in main (or a different function)
+/*
+    struct node * key = search_for_l_r(root , key);
+    
+    if (key==NULL)
+    {
+    printf("NOT FOUND");
+    }
+    if ( prev = NULL)
+    {
+    printf("ROOT node")
+    }
+
+    if (prev->left = key)
+    {
+    printf("LEFT");
+    }
+    else
+    {
+    printf("RIGHT")
+    }
+
+*/
+
+
 bool is_bst(struct node * root)
 {
     //use inorder traversal

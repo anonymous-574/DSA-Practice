@@ -96,6 +96,7 @@ struct node* delete_at_index(struct node * head , int index)
 
 struct node* delete_at_key(struct node * head , int value)
 {
+    /*
     struct node * ptr = head;
     int length=0;
     while (ptr!=NULL)
@@ -115,7 +116,23 @@ struct node* delete_at_key(struct node * head , int value)
     struct node * q = ptr->next;
     ptr->next = q->next;
     free(q);
-    return head;
+    */
+   struct node * ptr = head->next;
+   struct node * prev = head;
+
+   while (ptr->next!=NULL)
+   {
+    if (ptr->data==value)
+    {
+        break;
+    }
+    ptr=ptr->next;
+    prev=prev->next;
+   } 
+
+   prev->next = ptr->next;
+   free(ptr);
+   return head;
 }
 
 struct node* delete_at_end(struct node * head)
@@ -185,6 +202,10 @@ int main(int argc, char const *argv[])
     //head = delete_at_index(head , 1);
     //print(head);
     head = delete_at_end(head);
+    print(head);
+    head = insert_at_end(head , 99);
+    print(head);
+    head = insert_at_end(head , 91);
     print(head);
     head = delete_at_key(head , 66);
     print(head);
