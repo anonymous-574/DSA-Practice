@@ -155,6 +155,7 @@ struct node * delete(struct node * root , int value)
         return NULL;
     }
 
+    // no children
     if (root->left==NULL && root->right==NULL)
     {
         // parent ka must be set to null na?
@@ -162,14 +163,14 @@ struct node * delete(struct node * root , int value)
         return NULL;
     }
     
-    
+    //recursive left and right
     if (root->data > value)
     {
         root->left = delete(root->left,value);
     }
     else if (root->data < value)
     {
-        root->left=delete(root->right,value);
+        root->right=delete(root->right,value);
     }
     else
     {
