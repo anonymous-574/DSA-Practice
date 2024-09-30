@@ -22,8 +22,8 @@ void postorder(struct node * root)
 {
     if (root!=NULL)
     {
-        preorder(root->left);
-        preorder(root->right);
+        postorder(root->left);
+        postorder(root->right);
         printf("%d \n",root->data);
     }
 }
@@ -32,9 +32,9 @@ void inorder(struct node * root)
 {
     if (root!=NULL)
     {
-        preorder(root->left);
+        inorder(root->left);
         printf("%d \n",root->data);
-        preorder(root->right);
+        inorder(root->right);
     }
 }
 
