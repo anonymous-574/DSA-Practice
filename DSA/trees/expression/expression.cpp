@@ -2,38 +2,21 @@
 #include <stdlib.h>
 using namespace std;
 
-
-
-
-int main(int argc, char const *argv[])
-{
-    
-
-    /*
-    // Online C compiler to run C program online
-#include <stdio.h>
-#include <stdlib.h>
 typedef struct node
 {
-    int data;
+    char data;
+    node * left, * right;
 }node;
 
 typedef struct stack
 {
+    int top=-1;
+    //array of node pointers
     node * * arr;
 }stack;
 
-
-
-int main() {
-    // Write C code here
-    printf("Try programiz.pro");
-    Stack * myst= (stack *)malloc(5 *sizeof(stack));
-
-
-    return 0;
-}
-
-    */
+int main(int argc, char const *argv[])
+{
+    stack * myst= (stack *)malloc(5 *sizeof(stack));
     return 0;
 }
