@@ -206,7 +206,7 @@ void choice(node * root)
         {
             printf("Enter number to Delete \n");
             scanf("%d", &num);
-            insert(root,num);
+            delete(root,num);
             printf("\n\n");
             break;
         }
