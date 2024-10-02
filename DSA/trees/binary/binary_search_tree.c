@@ -196,6 +196,15 @@ struct node * in_order_predecessor( struct node * root)
     return root;
 }
 
+struct node * getSuccessor(struct node* root)
+{
+    //give leftmost value of right subtree
+    root = root->right;
+    while (root->left != NULL)
+        root = root->left;
+    return root;
+}
+
 struct node * delete(struct node * root , int value)
 {
     struct node * ipre=NULL;
