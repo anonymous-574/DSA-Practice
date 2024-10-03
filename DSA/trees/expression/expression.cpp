@@ -35,7 +35,8 @@ typedef struct stack
     int top=-1;
     int size=0;
     //array of node pointers
-    node * * arr;
+    //node * * arr;
+    node * arr[20];
 }stack;
 
 bool is_empty_st(stack * s)
@@ -101,12 +102,13 @@ node * postfix_to_xt(string input)
 
     size=20;
 
-    stack * s= (stack *)malloc(size *sizeof(stack));
+    stack * s= (stack *)malloc(sizeof(stack));
     s->size=size;
+    //s->arr = (node * *) malloc(size*sizeof(node*));
+    
     //printf("HI");
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < input.length(); i++)
     {
-        printf("HI? ");
         if (!is_operator(input[i]))
         {
             node * temp = create_node(input[i]);
@@ -117,20 +119,21 @@ node * postfix_to_xt(string input)
             node * op = create_node(input[i]);
             node * n1 = pop(s);
             node * n2 = pop(s);
-            op->left=n1;
-            op->right=n2;
+            op->right=n1;
+            op->left=n2;
             push(s,op);
         }   
     }
     
     node * output =pop(s);
-    if (!is_empty_st(s))
+    pop(s);
+    if (is_empty_st(s))
     {
-        printf("Input is wrong");
-        return NULL;
+        printf("Hello Done");
+        return output;
     }
-    printf("Hello");
-    return output;
+    printf("Input is wrong");
+    return NULL;
 }
 
 int main(int argc, char const *argv[])
@@ -140,10 +143,9 @@ int main(int argc, char const *argv[])
     //printf("Enter String: \n");
     //cin>>input;
 
-    input="ab*c/ef/g*+k+xy*-";
+    input="231*+9-";
     node * root = postfix_to_xt(input);
     //printf("\n\n\n");
-    printf("\n\n HI hello");
     inorder(root);
     return 0;
 }
