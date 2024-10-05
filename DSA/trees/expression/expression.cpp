@@ -119,8 +119,8 @@ node * postfix_to_xt(string input)
             node * op = create_node(input[i]);
             node * n1 = pop(s);
             node * n2 = pop(s);
-            op->right=n1;
-            op->left=n2;
+            op->left=n1;
+            op->right=n2;
             push(s,op);
         }   
     }
