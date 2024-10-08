@@ -20,7 +20,7 @@ void preorder(struct node * root)
     if (root!=NULL)
     {
         printf("%d \n",root->data);
-        preorder(root->left);
+        preorder(root->left); 
         preorder(root->right);
     }
 }
@@ -220,8 +220,7 @@ struct node * deletenode(struct node * root, int key)
       return root;
 
     // STEP 2: UPDATE HEIGHT OF THE CURRENT node
-    root->height = 1 + max(get_height(root->left),
-                           get_height(root->right));
+    root->height = 1 + max(get_height(root->left),get_height(root->right));
 
     // STEP 3: GET THE BALANCE FACTOR OF THIS node (to
     // check whether this node became unbalanced)
