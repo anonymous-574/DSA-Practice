@@ -81,17 +81,12 @@ node * right_rotate(node * y)
     struct node *x = y->left;
     struct node *T2 = x->right;
 
-    // Perform rotation
     x->right = y;
     y->left = T2;
 
-    // Update heights
-    y->height = max(get_height(y->left),
-                   get_height(y->right)) + 1;
-    x->height = max(get_height(x->left),
-                    get_height(x->right)) + 1;
+    y->height = max(get_height(y->left),get_height(y->right)) + 1;
+    x->height = max(get_height(x->left),get_height(x->right)) + 1;
 
-    // Return new root
     return x;
 }
 
@@ -100,17 +95,12 @@ node * left_rotate(node * x)
     struct node *y = x->right;
     struct node *T2 = y->left;
 
-    // Perform rotation
     y->left = x;
     x->right = T2;
 
-    //  Update heights
-    x->height = max(get_height(x->left),   
-                    get_height(x->right)) + 1;
-    y->height = max(get_height(y->left),
-                    get_height(y->right)) + 1;
+    x->height = max(get_height(x->left),get_height(x->right)) + 1;
+    y->height = max(get_height(y->left),get_height(y->right)) + 1;
 
-    // Return new root
     return y;
 }
 
@@ -131,13 +121,14 @@ node * insert(node * root , int data)
     root->height= 1+ max( get_height(root->left), get_height(root->right));
     int bf = get_bal_f(root);
 
-    
     printf("Before Impending Rotation After Insertion: \n");
     preorder(root);
     printf("\n");
 
+
     
     //recursion always gives the lowest unbalanced node
+
     //LL
     if (bf>1 && root->left!=NULL && data < root->left->data)
     {
@@ -228,8 +219,7 @@ void choice(node * root)
             scanf("%d", &num);
             root=insert(root,num);
             printf("After Insertion is complete: \n");
-            //preorder_with_bal(root);
-            preorder(root);
+            preorder_with_bal(root);
             printf("\n\n");
             break;
         }

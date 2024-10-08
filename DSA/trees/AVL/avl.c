@@ -78,7 +78,7 @@ struct node * right_rotate(struct node * y)
     struct node * T2= x->right;
 
     x->right=y;
-    x->left=T2;
+    y->left=T2;
     
     x->height= max(get_height(x->left) , get_height(x->right)) +1;
     y->height= max(get_height(y->left) , get_height(y->right)) +1;
