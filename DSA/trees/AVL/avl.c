@@ -149,109 +149,55 @@ struct node * insert(struct node * root , int data)
     return root;
 }
 
-struct node * minValuenode(struct node* node)
-{
-    struct node* current = node;
-
-    /* loop down to find the leftmost leaf */
-    while (current->left != NULL)
-        current = current->left;
-
-    return current;
+struct Node *minValueNode(struct Node *node){
+   struct node *current = node;
+   while (current->left != NULL)
+      current = current->left;
+   return current;
 }
-
-// Recursive function to delete a node with given key
-// from subtree with given root. It returns root of
-// the modified subtree.
-struct node * deletenode(struct node * root, int key)
+struct Node *deleteNode(struct node *root, int data)
 {
-    // STEP 1: PERFORM STANDARD BST DELETE
-
-    if (root == NULL)
-        return root;
-
-    // If the key to be deleted is smaller than the
-    // root's key, then it lies in left subtree
-    if ( key < root->data )
-        root->left = deletenode(root->left, key);
-
-    // If the key to be deleted is greater than the
-    // root's key, then it lies in right subtree
-    else if( key > root->data )
-        root->right = deletenode(root->right, key);
-
-    // if key is same as root's key, then This is
-    // the node to be deleted
-    else
-    {
-        // node with only one child or no child
-        if( (root->left == NULL) || (root->right == NULL) )
-        {
-            struct node *temp = root->left ? root->left :
-                                             root->right;
-
-            // No child case
-            if (temp == NULL)
-            {
-                temp = root;
-                root = NULL;
-            }
-            else // One child case
-             *root = *temp; // Copy the contents of
-                            // the non-empty child
-            free(temp);
-        }
-        else
-        {
-            // node with two children: Get the inorder
-            // successor (smallest in the right subtree)
-            struct node* temp = minValuenode(root->right);
-
-            // Copy the inorder successor's data to this node
-            root->data = temp->data;
-
-            // Delete the inorder successor
-            root->right = deletenode(root->right, temp->data);
-        }
-    }
-
-    // If the tree had only one node then return
-    if (root == NULL)
+   if (root == NULL)
       return root;
-
-    // STEP 2: UPDATE HEIGHT OF THE CURRENT node
-    root->height = 1 + max(get_height(root->left),get_height(root->right));
-
-    // STEP 3: GET THE BALANCE FACTOR OF THIS node (to
-    // check whether this node became unbalanced)
-    int balance = get_bal_f(root);
-
-    // If this node becomes unbalanced, then there are 4 cases
-
-    // Left Left Case
-    if (balance > 1 && get_bal_f(root->left) >= 0)
-        return right_rotate(root);
-
-    // Left Right Case
-    if (balance > 1 && get_bal_f(root->left) < 0)
-    {
-        root->left =  left_rotate(root->left);
-        return right_rotate(root);
-    }
-
-    // Right Right Case
-    if (balance < -1 && get_bal_f(root->right) <= 0)
-        return left_rotate(root);
-
-    // Right Left Case
-    if (balance < -1 && get_bal_f(root->right) > 0)
-    {
-        root->right = right_rotate(root->right);
-        return left_rotate(root);
-    }
-
-    return root;
+   if (data < root->data)
+      root->left = deleteNode(root->left, data);
+   else if (data > root->data)
+      root->right = deleteNode(root->right, data);
+   else {
+      if ((root->left == NULL) || (root->right == NULL)) {
+         struct node *temp = root->left ? root->left : root->right;
+         if (temp == NULL) {
+            temp = root;
+            root = NULL;
+         } else
+            *root = *temp;
+         free(temp);
+      } else {
+         struct node *temp = minValueNode(root->right);
+         root->data = temp->data;
+         root->right = deleteNode(root->right, temp->data);
+      }
+   }
+   if (root == NULL)
+      return root;
+   root->height = 1 + max(get_height(root->left),
+                     get_height(root->right));
+   int balance = get_bal_f(root);
+   if (balance > 1 && get_bal_f(root->left) >= 0)
+      return rightRotate(root);
+   if (balance > 1 && get_bal_f(root->left) < 0) {
+      root->left = left_rotate(root->left);
+      return right_rotate(root);
+   }
+   if (balance < -1 && get_bal_f(root->right) <= 0)
+      return leftRotate(root);
+   if (balance < -1 && get_bal_f(root->right) > 0) {
+      root->right = right_rotate(root->right);
+      return left_rotate(root);
+   }
+   return root;
 }
+
 
 struct node * search(struct node * root, int key)
 {

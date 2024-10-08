@@ -109,7 +109,6 @@ node * insert(node * root , int data)
 {
     if (root==NULL)
         return create_node(data);
-    
     if (data <root->data)
         root->left=insert(root->left,data);
     else if (data>root->data)
@@ -234,11 +233,7 @@ void choice(node * root)
 
 int main(int argc, char const *argv[])
 {
-    node * root =(node *) malloc(sizeof(node));
-    int num=0;
-    printf("Enter number to Insert \n");
-    scanf("%d", &num);
-    root->data=num;
+    node * root =NULL;
     choice(root);
     free_tree(root);
     return 0;
