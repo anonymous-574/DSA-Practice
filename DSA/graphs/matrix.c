@@ -9,7 +9,15 @@ typedef struct graph
     int ** arr;
 }graph;
 
+graph* expand_graph(graph * g ,int vertices) {
+  int old_verices_no= g->no_of_vertices;
+  g->no_of_vertices=vertices;
+  g->arr= realloc(g->arr,sizeof(int)*(g->no_of_vertices*g->no_of_vertices)) ;
 
+  //set new nodes to null
+
+  return g;
+}
 
 int main(int argc, char const *argv[])
 {

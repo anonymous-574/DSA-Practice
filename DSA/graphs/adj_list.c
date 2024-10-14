@@ -15,7 +15,6 @@ typedef struct arr_holding_the_LL
     struct node * * adj_arr;
 }graph;
 
-// Create a node
 struct node* createNode(int v) {
   struct node* newNode = malloc(sizeof(struct node));
   newNode->vertex = v;
@@ -23,7 +22,6 @@ struct node* createNode(int v) {
   return newNode;
 }
 
-// Create a graph
 graph* createAGraph(int vertices) {
   graph* graph = malloc(sizeof(graph));
   graph->vertices_no = vertices;
@@ -65,11 +63,26 @@ void printGraph(graph* graph) {
   }
 }
 
+graph* expand_graph(graph * g ,int vertices) {
+  int old_verices_no= g->vertices_no;
+  g->vertices_no=vertices;
+  g->adj_arr= realloc(g->adj_arr, (vertices * sizeof(struct node*)));
+
+  for (int i = old_verices_no; i < vertices; i++)
+    g->adj_arr[i] = NULL;
+
+  return g;
+}
+
 
 int main(int argc, char const *argv[])
 {
     graph * g =createAGraph(10);
     addEdge(g,0,1);
+    addEdge(g,0,2);
+    printGraph(g);
+
+    g=expand_graph(g,11);
     printGraph(g);
     return 0;
 }
