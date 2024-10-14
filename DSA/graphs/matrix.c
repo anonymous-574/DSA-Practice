@@ -170,7 +170,6 @@ int main(int argc, char const *argv[])
         }
     }
 
-    //g=init(g);
     g=add_edge(g,0,1); 
     g=add_edge(g,0,2);
     g=add_edge(g,1,2);
@@ -194,79 +193,3 @@ int main(int argc, char const *argv[])
     
     return 0;
 }
-
-/*
-#include <stdio.h>
-
-#define MAX_VERTICES 10
-
-void DFS(int graph[MAX_VERTICES][MAX_VERTICES], int visited[MAX_VERTICES], int vertices, int start, int start_time[MAX_VERTICES], int end_time[MAX_VERTICES], int *time) {
-    visited[start] = 1;  // Mark the current vertex as visited
-    start_time[start] = ++(*time);  // Record the start time
-    printf("%d ", start);  // Print the current vertex
-
-    // Visit all adjacent vertices
-    for (int i = 0; i < vertices; i++) {
-        if (graph[start][i] == 1 && visited[i] == 0) {  // Only visit unvisited nodes
-            DFS(graph, visited, vertices, i, start_time, end_time, time);  // Recursive DFS call
-        }
-    }
-
-    end_time[start] = ++(*time);  // Record the end time when fully explored
-}
-
-    int graph[MAX_VERTICES][MAX_VERTICES] = {0};  // Initialize the adjacency matrix
-    int visited[MAX_VERTICES] = {0};              // Initialize the visited array
-    int start_time[MAX_VERTICES] = {0};           // Initialize start time array
-    int end_time[MAX_VERTICES] = {0};             // Initialize end time array
-
-
-    // Validate the number of edges
-    if (edges < 0 || edges > vertices * (vertices - 1) / 2) {
-        printf("Invalid number of edges. Exiting...\n");
-        return 1;
-    }
-
-    // Input edges and construct the adjacency matrix
-    for (int i = 0; i < edges; i++) {
-        int start, end;
-        printf("Enter edge %d (start end): ", i + 1);
-        scanf("%d %d", &start, &end);
-
-        // Validate edge input
-        if (start < 0 || start >= vertices || end < 0 || end >= vertices) {
-            printf("Invalid vertices. Try again.\n");
-            i--;
-            continue;
-        }
-
-        graph[start][end] = 1;  // Add edge from start to end
-        graph[end][start] = 1;  // For undirected graph, also add edge from end to start
-    }
-
-    // Input the starting vertex for DFS traversal
-    int startVertex;
-    printf("Enter the starting vertex for DFS traversal: ");
-    scanf("%d", &startVertex);
-
-    // Validate starting vertex
-    if (startVertex < 0 || startVertex >= vertices) {
-        printf("Invalid starting vertex. Exiting...\n");
-        return 1;
-    }
-
-    int time = 0;  // Initialize time counter
-    printf("DFS Traversal Order: ");
-    DFS(graph, visited, vertices, startVertex, start_time, end_time, &time);  // Call DFS
-
-    // After traversal, print the start and end times for each vertex
-    printf("\n\nVertex\tStart Time\tEnd Time\n");
-    for (int i = 0; i < vertices; i++) {
-        printf("%d\t\t%d\t\t%d\n", i, start_time[i], end_time[i]);
-    }
-
-    return 0;
-}
-
-
-*/
