@@ -96,7 +96,6 @@ void bfs_with_level(graph * g,int start)
 
     //i IS SAME AS STARTING VERTEX 
     int i=start;
-    //printf("%d ",i);
     printf("%d ,Level= %d\n",i,level);
     
     enqueue(q,i);
@@ -106,6 +105,7 @@ void bfs_with_level(graph * g,int start)
     while (!isEmpty(q))
     {
         int node = dequeue(q);
+        printf("Dequeuing %d \n",node);
         level++;
 
         for (int j = 0; j < g->no_of_vertices; j++)
@@ -117,7 +117,7 @@ void bfs_with_level(graph * g,int start)
                 printf("%d ,Level= %d\n",j,level);
                 visited[j]=1;
                 enqueue(q,j);
-                printf("Dequeuing %d \n",j);
+                printf("Enqueuing %d \n",j);
             }
             
         }
@@ -168,46 +168,42 @@ void bfs(graph * g,int start)
     free(q->items);
     free(q);
 }
+int time = 0;
+int *start_time;
+int *end_time;
 
-int time=0;
-int * start_time;
-int * end_time;
-void dfs_with_time(graph *g, int start, int * visited ) {
-
-    start_time=(int*)malloc(sizeof(int)*g->no_of_vertices);
-    end_time=(int*)malloc(sizeof(int)*g->no_of_vertices);
-    for (int i = 0; i < g->no_of_vertices; i++)
-    {
-        start_time[i]=0;
-        end_time[i]=0;
+void dfs_with_time(graph *g, int start, int *visited) {
+    if (start_time == NULL) {
+        start_time = (int *)malloc(sizeof(int) * g->no_of_vertices);
+        end_time = (int *)malloc(sizeof(int) * g->no_of_vertices);
+        for (int i = 0; i < g->no_of_vertices; i++) {
+            start_time[i] = 0;
+            end_time[i] = 0;
+        }
     }
     
-    int i=start;
     time++;
-    printf("%d ,Entering Time= %d\n",i,time);
-    start_time[i]=time;
-    visited[i]=1;
+    visited[start] = 1;
+    start_time[start] = time;
 
-    for (int j = 0; j < g->no_of_vertices; j++)
-    {
-        if (g->arr[i][j]==1 && !visited[j])
-        {
-            dfs_with_time(g,j,visited);
-            time++;
-            printf("%d ,Exiting Time= %d\n",j,time);
+    printf("Node %d: Entering Time = %d\n", start, start_time[start]);
+
+    for (int j = 0; j < g->no_of_vertices; j++) {
+        if (g->arr[start][j] == 1 && !visited[j]) {
+            dfs_with_time(g, j, visited);
         }
-        
-    }    
+    }
+
+    time++;
+    end_time[start] = time;
+    printf("Node %d: Exiting Time = %d\n", start, end_time[start]);
 }
 
-void show_table(graph * g)
-{
-    printf("Vertex \t Start Time \t End Time \n");
-    for (int i = 0; i < g->no_of_vertices; i++)
-    {
-        printf(" %d \t   %d \t \t  %d \n",i,start_time[i],end_time[i]);
+void show_table(graph *g) {
+    printf("\nNode\tStart Time\tEnd Time\n");
+    for (int i = 0; i < g->no_of_vertices; i++) {
+        printf("%d\t%d\t\t%d\n", i, start_time[i], end_time[i]);
     }
-    
 }
 
 void dfs(graph *g, int start, int * visited) {
@@ -317,7 +313,10 @@ void choice(graph * g)
 int main(int argc, char const *argv[])
 {
     graph * g = (graph *) malloc(sizeof(graph));
-    g->no_of_vertices=8;
+    printf("Enter Number Initial Vertices: ");
+    int num=0;
+    scanf("%d",&num);
+    g->no_of_vertices=num;
     g->no_of_edges=0;
 
     // make 2d array
@@ -335,40 +334,7 @@ int main(int argc, char const *argv[])
         }
     }
 
-    //choice(g);
-
-    g=add_edge(g,0,1); 
-    g=add_edge(g,0,2);
-    g=add_edge(g,0,3);
-    g=add_edge(g,1,2);
-    g=add_edge(g,1,4);
-    g=add_edge(g,1,5);
-    g=add_edge(g,2,5);
-    g=add_edge(g,4,5);
-    g=add_edge(g,3,6);
-    g=add_edge(g,3,7);
-    g=add_edge(g,6,7);
-
-
-    //bfs is 01324
-
-    display_graph(g);
-    printf("\n\n\n");
-    printf("BFS: \n");
-    bfs_with_level(g,0);
-    printf("\n\n\n");
-    bfs(g,0);
-    printf("\n\n\n");
-
-
-    int * visited=init_visited(g);
-    printf("DFS: \n");
-    dfs_with_time(g,0,visited);
-    show_table(g);
-    printf("\n\n\n");
-    visited=init_visited(g);
-    dfs(g,0,visited);
-    printf("\n\n\n");
+    choice(g);
 
     for(int i = 0; i < g->no_of_vertices; i++)
     {
