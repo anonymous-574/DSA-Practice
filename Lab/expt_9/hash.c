@@ -42,8 +42,8 @@ void insert_lin(hash * h, int key)
                 return;
             }
             
-            rem= (++rem)%h->size;     
-            printf("Applying Probe %d: %d %% %d = %d \n",probe_no, key , h->size,  rem);  
+            rem= (rem+probe_no)%h->size;     
+            printf("Applying Probe %d: (%d+%d) %% %d = %d \n",probe_no, key,probe_no, h->size,  rem);  
             probe_no++;     
         }
         h->arr[rem]=key;
@@ -84,20 +84,21 @@ void insert_quad(hash * h, int key)
         temp++; 
         ecount++;
         }
+        if (ecount>(h->size*2)-2)
+        {
+        printf("Element %d is going in infinite loop: ",key);
+        return;
+        }
         h->arr[rem]=key;
         h->status[rem]='F';
     }    
-    if (ecount>(h->size*2)-2)
-    {
-        printf("Element %d is going in infinite loop: ",key);
-        return;
-    }
+    
     printf("Element %d has been inserted at %d \n",key,rem);
 }
 
 int hash_fn1 (hash *h , int key)
 {
-    return 5- ((key%5));
+    return 7- ((key%5));
 }
 
 void insert_doub(hash * h, int key)
@@ -136,14 +137,17 @@ void insert_doub(hash * h, int key)
             temp++; 
             ecount++;
         }
-        h->arr[rem]=key;
-        h->status[rem]='F';
-    }    
-    if (ecount>(h->size*2)-2)
-    {
+
+        if (ecount>(h->size*2)-2)
+        {
         printf("Element %d is going in infinite loop: \n",key);
         return;
+        }
+        h->arr[rem]=key;
+        h->status[rem]='F';
     }
+
+    
     
     printf("Element %d has been inserted at %d \n",key,rem);
 }
@@ -160,14 +164,14 @@ void print_hash(hash* h)
 
 void choice(hash * h)
 {
-    printf("Enter 1 to Do linear probing \nEnter 2 to do Quadratic probing: \n Enter 3 to do Double Hashing");
+    printf("Enter 1 to Do linear probing \nEnter 2 to do Quadratic probing: \nEnter 3 to do Double Hashing \n");
     int num=0;
     scanf("%d",&num);
     switch (num)
     {
     case 1:
     {
-        printf("Welcome to linear probing \n Enter 1 to insert \n Enter 2 to print the entire Table \n Enter 0 to Exit");
+        printf("Welcome to linear probing \n Enter 1 to insert \n Enter 2 to print the entire Table \n Enter 0 to Exit \n");
         while (true)
         {
             int choice=0;
@@ -196,7 +200,7 @@ void choice(hash * h)
             
             default:
             {
-                printf("USER IS AN IDTOT!");
+                printf("Error");
                 break;
             }
             } 
@@ -237,7 +241,7 @@ void choice(hash * h)
             
             default:
             {
-                printf("USER IS AN IDTOT!");
+                printf("Error");
                 break;
             }
             } 
@@ -277,7 +281,7 @@ void choice(hash * h)
             
             default:
             {
-                printf("USER IS AN IDTOT!");
+                printf("Error");
                 break;
             }
             } 
@@ -288,7 +292,7 @@ void choice(hash * h)
 
     default:
     {
-        printf("USER IS AN IDTOT!");
+        printf("Error");
         break;
     }
 
@@ -303,7 +307,7 @@ int main(int argc, char const *argv[])
 
     printf("Enter size of the hash table: ");
     int hash_size=10;
-    //scanf("%d",&hash_size);
+    scanf("%d",&hash_size);
     
     h->size=hash_size;
     h->arr=(int *)malloc(h->size *sizeof(int));
@@ -313,49 +317,8 @@ int main(int argc, char const *argv[])
         h->status[i]='E';
         h->arr[i]=-1;
     }
-    
-    //choice(h);
 
-    //insert_lin(h,77);
-    //insert_lin(h,153);
-    //insert_lin(h,1);
-    //insert_lin(h,3);
-    //insert_lin(h,79);
-    //insert_lin(h,155);
-    //insert_lin(h,0);
-    //insert_lin(h,76);
-    //insert_lin(h,152);
-    //insert_lin(h,152);
-    //print_hash(h);
-    
-    //insert_quad(h,77);
-    //insert_quad(h,153);
-    //insert_quad(h,1);
-    //insert_quad(h,3);
-    //insert_quad(h,79);
-    //insert_quad(h,155);
-    //insert_quad(h,0);
-    //insert_quad(h,76);
-    //insert_quad(h,152);
-    //insert_quad(h,152);
-    //print_hash(h);
-
-    insert_doub(h,77);
-    insert_doub(h,153);
-    insert_doub(h,1);
-    insert_doub(h,3);
-    insert_doub(h,79);
-    insert_doub(h,155);
-    insert_doub(h,0);
-    insert_doub(h,76);
-    insert_doub(h,152);
-    insert_doub(h,152);
-    print_hash(h);
-    
-    
-
-
-
+    choice(h);
 
     free(h->arr);
     free(h->status);
