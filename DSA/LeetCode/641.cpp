@@ -19,15 +19,6 @@ public:
         {
             return false;
         }
-        
-        /*
-        // push all to the right
-        for (int i = ((r+1)%size); i > f; --i) {
-        arr[i] = arr[i - 1];
-        }
-        r=(r+1)%size;
-        arr[f]=value;
-        */
        
         f--;
         f +=size;
