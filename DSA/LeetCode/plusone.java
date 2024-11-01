@@ -11,7 +11,7 @@ class Solution {
         for (int i = 0; i < digits.length; i++) {
          if (digits[i]==9) {
             is_all_9++;
-         }   
+         }
         }
 
         // if all digits are 9
