@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
 typedef struct node
 {
     struct node * next;
@@ -75,6 +76,7 @@ graph* expand_graph(graph * g ,int vertices) {
 }
 
 
+
 int main(int argc, char const *argv[])
 {
     graph * g =createAGraph(10);
@@ -85,4 +87,74 @@ int main(int argc, char const *argv[])
     g=expand_graph(g,11);
     printGraph(g);
     return 0;
+}
+*/
+
+typedef struct node
+{
+  struct node* next;
+  int val;
+}node;
+
+
+typedef struct graph
+{
+  struct node ** arr;
+  int size;
+}graph;
+
+
+graph* createAGraph(int size) {
+  graph* graph = malloc(sizeof(graph));
+  graph->size = size;
+
+  graph->arr = malloc(size * sizeof(node *));
+
+  for (int i = 0; i < size; i++)
+    graph->arr[i] = NULL;
+
+  return graph;
+}
+
+struct node* insert_at_end(struct node * head, int d)
+{
+    node * new_end = malloc(sizeof(struct node));
+    new_end->val=d;
+    new_end->next=NULL;
+    node * ptr =head;
+    
+
+    if (head == NULL) {
+        return new_end;
+    }
+
+    while(ptr->next!= NULL)
+    {
+        ptr = ptr->next;
+    }
+    ptr->next=new_end;
+    new_end->next=NULL;
+    return head;
+}
+
+//take the edges in sorted order
+//add e1 in the end
+//e2 at front
+//ex 1,4
+void add_edge(graph* g, int e1, int e2) {
+    g->arr[e1] = insert_at_end(g->arr[e1], e2);
+    g->arr[e2] = insert_at_end(g->arr[e2], e1);
+}
+
+int main(int argc, char const *argv[])
+{
+  graph * g =createAGraph(10);
+  printf("HI");
+  add_edge(g,1,4);
+  add_edge(g,1,5);
+  add_edge(g,1,3);
+  add_edge(g,2,4);
+  printf("HI");
+
+  return 0;
 }
