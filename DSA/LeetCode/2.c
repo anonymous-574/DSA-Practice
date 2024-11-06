@@ -19,9 +19,10 @@ int size_of_ll(struct ListNode* l)
 }
 
 struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
-    int s1=size_of_ll(l1);
-    int s2=size_of_ll(l2);
+    //int s1=size_of_ll(l1);
+    //int s2=size_of_ll(l2);
     
+    /*
     struct ListNode* temp1=l1;
     struct ListNode* temp2=l2;
     int tempsum=0;
@@ -127,5 +128,61 @@ struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
         return l1;
     }
     //fallback
-    return NULL;
+    */
+
+
+    int s1=size_of_ll(l1);
+    int s2=size_of_ll(l2);
+    
+    struct ListNode* temp=l1;
+    int tempsum=0;
+
+    if (s1<s2)
+    {
+        l1=l2;
+        l2=temp;
+    }
+
+    //guaranteed that l1 >l2 or l1=l2
+    struct ListNode* temp1=l1;
+    struct ListNode* temp2=l2;
+    int c=0;
+    while (temp2->next!=NULL)
+        {
+            tempsum=temp2->val+temp1->val+c;
+            temp1->val=tempsum%10;
+            c= (temp2->val+temp1->val+c)/10;
+            if (temp1->next==NULL)
+            {
+                struct ListNode * node =(struct ListNode * )malloc(sizeof(struct ListNode ));
+                node->next=NULL;
+                temp1->next=node;
+                node->val=0; 
+            }
+
+            temp1->next->val+=c;
+            temp1=temp1->next;
+            temp2=temp2->next;
+        }
+
+        while (temp1->next!=NULL)
+        {
+            tempsum=temp1->val+c;
+            temp1->val=tempsum%10;
+            c=(temp1->val+c)/10;
+
+            if (temp1->next==NULL)
+            {
+                struct ListNode * node =(struct ListNode * )malloc(sizeof(struct ListNode ));
+                node->next=NULL;
+                temp1->next=node;
+                node->val=0; 
+            }
+            temp1->next->val+=c; 
+            temp1=temp1->next;
+        }
+        
+
+        return l1;
+    
 }

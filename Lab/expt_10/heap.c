@@ -47,13 +47,16 @@ void heapSort(int * arr, int n, int isMinHeap) {
     for (int i = n / 2 - 1; i >= 0; i--){
         heapify(arr, n, i, isMinHeap);    
 	} 
-
+    printf("Heap Tree is: \n");
+    print(arr,n);
     //swap it 
     for (int i = n - 1; i > 0; i--) {
         swap(&arr[0], &arr[i]);
         heapify(arr, i, 0, isMinHeap);
         print(arr,n);
     } 
+    printf("Sorted Array is: \n");
+    print(arr,n);
 }
 
 void choice (int * arr,int size)
