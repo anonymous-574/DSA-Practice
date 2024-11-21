@@ -76,32 +76,30 @@ void preorder_with_bal(node * root)
     }
 }
 
-node * right_rotate(node * y)
+node * right_rotate(node * root)
 {
-    struct node *x = y->left;
-    struct node *T2 = x->right;
+   struct node *rightPtr=root->right;
+   struct node *temp=rightPtr->left;
+   rightPtr->left=root;
+   root->right=temp;
 
-    x->right = y;
-    y->left = T2;
+    root->height = max(get_height(root->left),get_height(root->right)) + 1;
+    rightPtr->height = max(get_height(rightPtr->left),get_height(rightPtr->right)) + 1;
 
-    y->height = max(get_height(y->left),get_height(y->right)) + 1;
-    x->height = max(get_height(x->left),get_height(x->right)) + 1;
-
-    return x;
+    return rightPtr;
 }
 
-node * left_rotate(node * x)
+node * left_rotate(node * root)
 {
-    struct node *y = x->right;
-    struct node *T2 = y->left;
+    struct node *leftPtr=root->left;
+   struct node *temp=leftPtr->right;
+   leftPtr->right=root;
+   root->left=temp;
 
-    y->left = x;
-    x->right = T2;
+    root->height = max(get_height(root->left),get_height(root->right)) + 1;
+    leftPtr->height = max(get_height(leftPtr->left),get_height(leftPtr->right)) + 1;
 
-    x->height = max(get_height(x->left),get_height(x->right)) + 1;
-    y->height = max(get_height(y->left),get_height(y->right)) + 1;
-
-    return y;
+    return leftPtr;
 }
 
 
@@ -132,30 +130,30 @@ node * insert(node * root , int data)
     if (bf>1 && root->left!=NULL && data < root->left->data)
     {
         printf("Appying LL Rotation \n");
-        return right_rotate(root);
+        return left_rotate(root);
     }
     
     //RR
     if (bf<-1 && root->right!=NULL && data > root->right->data )
     {
         printf("Appying RR Rotation \n");
-        return left_rotate(root);
+        return right_rotate(root);
     }
 
     //LR
     if (bf>1 && data > root->left->data)
     {
         printf("Appying LR Rotation \n");
-        root->left = left_rotate(root->left);
-        return right_rotate(root);
+        root->left = right_rotate(root->left);
+        return left_rotate(root);
     }
 
     //RL
     if (bf < -1 && data < root->right->data) 
     {
     printf("Applying RL Rotation \n");
-    root->right = right_rotate(root->right);
-    return left_rotate(root);
+    root->right = left_rotate(root->right);
+    return right_rotate(root);
     }
 
     return root;

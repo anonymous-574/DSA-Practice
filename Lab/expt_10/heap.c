@@ -24,12 +24,13 @@ void heapify(int * arr, int n, int i, int isMinHeap) {
     int left = 2 * i + 1;
     int right = 2 * i + 2;
 
-    if (isMinHeap) {
+    if (isMinHeap==1) {
         if (left < n && arr[left] < arr[largest_smallest])
             largest_smallest = left;
         if (right < n && arr[right] < arr[largest_smallest])
             largest_smallest = right;
-    } else {
+    } 
+    else {
         if (left < n && arr[left] > arr[largest_smallest])
             largest_smallest = left;
         if (right < n && arr[right] > arr[largest_smallest])

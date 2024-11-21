@@ -55,7 +55,7 @@ char pop (struct stack * s)
 
 bool is_operator (char op)
 {
-    if (op=='+' ||op=='-' ||op=='*' ||op=='/')
+    if (op=='+' ||op=='-' ||op=='*' ||op=='/' || op=='('||op==')')
     {
         return true;
     }
@@ -83,7 +83,7 @@ int weight_of_operator (char op)
 
 char * in_to_po (char* imput)
 {
-    struct stack * s = (struct stack *) malloc(sizeof(struct stack *));
+    struct stack * s = (struct stack *) malloc(sizeof(struct stack));
     s->size=10;
     s->arr = (char *) malloc(s->size*sizeof(char));
     s->top=-1;
@@ -122,34 +122,71 @@ char * in_to_po (char* imput)
         j++;
         }
     output[j]='\0';
+    free(s->arr);
+    free(s);
     return output;
 }
 
 char * in_to_pre (char* input)
 {
-    struct stack * s = (struct stack *) malloc(sizeof(struct stack *));
+    struct stack * s = (struct stack *) malloc(sizeof(struct stack));
     s->size=10;
     s->arr = (char *) malloc(s->size*sizeof(char));
     s->top=-1;
 
     //output string
     char * output = (char *)malloc((strlen(input)+1)*sizeof(char));
-
-    
-    for (int i = strlen(input); i >= 0; i--)
+    int j=strlen(input)-2;    
+    for (int i = strlen(input)-1; i >= 0; i--)
     {
         if (!is_operator(input[i]))
         {
-
+            output[j]=input[i];
+            j--;
         }
+        else if(input[i]==')')
+        {
+            push(s,input[i]);
+        }
+        else if (input[i]=='(')
+        {
+            while (s->top!=')')
+            {
+                output[j]=pop(s);
+                j--;
+            }   
+        }
+        else
+        {
+            //we have an operator
+            if (weight_of_operator(input[i])>= weight_of_operator(s->arr[s->top]))
+            {
+                push(s , input[i]);
+            }
+            else
+            {
+                output[j]=pop(s);
+                j--;
+            }
+            
+
+        }  
     }
-    
+    while (!is_empty(s))
+        {
+        output[j]=pop(s);
+        j--;
+        }
+    output[strlen(input)-1]='\0';
+    return output;
     
 }
 
 int main(int argc, char const *argv[])
 {
     char * op = in_to_po("1+2*3-4");
-    printf("%s ",op);    
+    printf("%s ",op);
+    char * op1 = in_to_pre("1+2*3-4");
+    printf("%s ",op1);    
     return 0;
 }

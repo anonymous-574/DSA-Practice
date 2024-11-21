@@ -117,6 +117,17 @@ node * in_order_predecessor(node * root)
     return root;
 }
 
+node * in_order_successor(node * root)
+{
+    //give leftmost val of right subtree
+    root=root->right;
+    while (root->left!=NULL)
+    {
+        root=root->left;
+    }
+    return root;
+}
+
 node * delete(node * root , int value)
 {
     node * ipre=NULL;

@@ -1,160 +1,160 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*
-typedef struct node
-{
-    struct node * next;
-    int vertex;
-}node;
+#define N 100
 
-typedef struct arr_holding_the_LL
-{
-    //number of vertices graph has
-    int vertices_no;
-    //just holds pointer to a node
-    struct node * * adj_arr;
-}graph;
+typedef struct Node{
+    int data;
+    struct Node* next;
+} Node;
 
-struct node* createNode(int v) {
-  struct node* newNode = malloc(sizeof(struct node));
-  newNode->vertex = v;
-  newNode->next = NULL;
-  return newNode;
+typedef struct Stack{
+    int top;
+    Node* arr[N];
+} Stack;
+
+typedef struct Queue{
+    int front, rear;
+    Node* arr[N];
+} Queue;
+
+Node* createNode(int data){
+    Node* p = malloc(sizeof(Node));
+    p->data = data;
+    p->next = NULL;
+    return p;
 }
 
-graph* createAGraph(int vertices) {
-  graph* graph = malloc(sizeof(graph));
-  graph->vertices_no = vertices;
-
-  graph->adj_arr = malloc(vertices * sizeof(struct node*));
-
-  int i;
-  for (i = 0; i < vertices; i++)
-    graph->adj_arr[i] = NULL;
-
-  return graph;
-}
-
-// Add edge
-void addEdge(graph* graph, int s, int d) {
-  // Add edge from s to d
-  struct node* newNode = createNode(d);
-  newNode->next = graph->adj_arr[s];
-  graph->adj_arr[s] = newNode;
-
-  // Add edge from d to s
-  newNode = createNode(s);
-  newNode->next = graph->adj_arr[d];
-  graph->adj_arr[d] = newNode;
-}
-
-// Print the graph
-//bfs
-void printGraph(graph* graph) {
-  int v;
-  for (v = 0; v < graph->vertices_no; v++) {
-    struct node* temp = graph->adj_arr[v];
-    printf("\n Vertex %d\n: ", v);
-    while (temp) {
-      printf("%d -> ", temp->vertex);
-      temp = temp->next;
+Node* addNode(Node* h, int data){
+    if(h == NULL){
+        return createNode(data);
     }
-    printf("\n");
-  }
+    Node* t = h;
+    while(t->next != NULL){
+        t = t->next;
+    }
+    t->next = createNode(data);
+    return h;
 }
 
-graph* expand_graph(graph * g ,int vertices) {
-  int old_verices_no= g->vertices_no;
-  g->vertices_no=vertices;
-  g->adj_arr= realloc(g->adj_arr, (vertices * sizeof(struct node*)));
-
-  for (int i = old_verices_no; i < vertices; i++)
-    g->adj_arr[i] = NULL;
-
-  return g;
+void push(Stack* s, Node* data){
+    s->arr[++(s->top)] = data;
 }
 
-
-
-int main(int argc, char const *argv[])
-{
-    graph * g =createAGraph(10);
-    addEdge(g,0,1);
-    addEdge(g,0,2);
-    printGraph(g);
-
-    g=expand_graph(g,11);
-    printGraph(g);
-    return 0;
-}
-*/
-
-typedef struct node
-{
-  struct node* next;
-  int val;
-}node;
-
-
-typedef struct graph
-{
-  struct node ** arr;
-  int size;
-}graph;
-
-
-graph* createAGraph(int size) {
-  graph* graph = malloc(sizeof(graph));
-  graph->size = size;
-
-  graph->arr = malloc(size * sizeof(node *));
-
-  for (int i = 0; i < size; i++)
-    graph->arr[i] = NULL;
-
-  return graph;
+void pop(Stack* s){
+    (s->top)--;
 }
 
-struct node* insert_at_end(struct node * head, int d)
-{
-    node * new_end = malloc(sizeof(struct node));
-    new_end->val=d;
-    new_end->next=NULL;
-    node * ptr =head;
+void enqueue(Queue* q, Node* data){
+    q->arr[++(q->rear)] = data;
+}
+
+void dequeue(Queue* q){
+    (q->front)++;
+}
+
+void DFS(int v, Node* Graph[v]){
+    int visited[v];
+    for(int i = 0; i < v; i++){
+        visited[i] = 0;
+    }
+    int start;
+    printf("Start vertex: ");
+    scanf("%d", &start);
+    Stack s;
+    s.top = -1;  
+    push(&s, Graph[start]);
+    visited[start] = 1;
+    printf("%d", start);
     
-
-    if (head == NULL) {
-        return new_end;
+    while(s.top != -1){
+        Node* cur = s.arr[s.top];
+        int flag = 0;
+        for(Node* i = cur; i != NULL; i = i->next){
+            if(!visited[i->data]){
+                printf(" -> %d", i->data);
+                push(&s, Graph[i->data]);
+                visited[i->data] = 1;
+                flag = 1;
+                break;
+            }
+        }
+        if(!flag){
+            pop(&s);
+        }
     }
-
-    while(ptr->next!= NULL)
-    {
-        ptr = ptr->next;
-    }
-    ptr->next=new_end;
-    new_end->next=NULL;
-    return head;
 }
 
-//take the edges in sorted order
-//add e1 in the end
-//e2 at front
-//ex 1,4
-void add_edge(graph* g, int e1, int e2) {
-    g->arr[e1] = insert_at_end(g->arr[e1], e2);
-    g->arr[e2] = insert_at_end(g->arr[e2], e1);
+void BFS(int v, Node* Graph[v]){
+    int visited[v];
+    for(int i = 0; i < v; i++){
+        visited[i] = 0;
+    }
+    int start;
+    printf("Start vertex: ");
+    scanf("%d", &start);
+    Queue q;
+    q.front = 0;  
+    q.rear = -1;  
+    enqueue(&q, Graph[start]);
+    visited[start] = 1;
+    printf("%d", start);
+
+    while(q.rear >= q.front){
+        Node* cur = q.arr[q.front];
+        dequeue(&q);
+        while(cur != NULL){
+            if(!visited[cur->data]){
+                printf(" -> %d", cur->data);
+                enqueue(&q, Graph[cur->data]);
+                visited[cur->data] = 1;
+            }
+            cur = cur->next;
+        }
+    }
 }
 
-int main(int argc, char const *argv[])
-{
-  graph * g =createAGraph(10);
-  printf("HI");
-  add_edge(g,1,4);
-  add_edge(g,1,5);
-  add_edge(g,1,3);
-  add_edge(g,2,4);
-  printf("HI");
+void printAdjList(int v, Node* arr[v]) {
+    for(int i = 0; i < v; i++) {
+        printf("Vertex %d: ", i);
+        Node* cur = arr[i];
+        while(cur != NULL) {
+            printf("%d ", cur->data);
+            cur = cur->next;
+        }
+        printf("-> NULL\n");
+    }
+}
 
-  return 0;
+int main(){
+    int v;
+    printf("Number of vertices: ");
+    scanf("%d", &v);
+    int e;
+    Node* Graph[v];
+    for(int i = 0; i < v; i++){
+        Graph[i] = NULL;
+    }
+    printf("Number of edges: ");
+    scanf("%d", &e);
+    int start, end;
+    for(int i = 0; i < e; i++){
+        printf("Edge %d: ", i + 1);
+        scanf("%d %d", &start, &end);
+        if(start >= 0 && start < v && end >= 0 && end < v) {
+            Graph[start] = addNode(Graph[start], end);
+        } else {
+            printf("Invalid edge! Vertex indices must be between 0 and %d\n", v-1);
+        }
+    }
+    
+    printAdjList(v, Graph);
+    
+    printf("\nDFS Traversal:\n");
+    DFS(v, Graph);
+    
+    printf("\n\nBFS Traversal:\n");
+    BFS(v, Graph);
+    
+    return 0;
 }
