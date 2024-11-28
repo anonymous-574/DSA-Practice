@@ -16,6 +16,10 @@
 *.gch
 *.pch
 
+# C++ Specific Precompiled Headers
+*.h.gch
+*.hpp.gch
+
 # Libraries
 *.lib
 *.a
@@ -41,7 +45,17 @@
 *.su
 *.idb
 *.pdb
-.vscode
+
+# C++ Debugging and Intermediate Files
+*.tlog
+*.ipch
+*.obj
+*.vcxproj*
+*.suo
+
+# IDE Specific Files
+.vscode/
+
 # Kernel Module Compile Results
 *.mod*
 *.cmd
