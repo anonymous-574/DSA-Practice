@@ -60,6 +60,22 @@ void heapSort(int * arr, int n, int isMinHeap) {
     print(arr,n);
 }
 
+/*
+bool is_it=true;
+bool is_min_heap(int * arr, int i, int size)
+{
+    int curr = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < size && )
+    {
+        
+    }
+    
+}
+*/
+
 void choice (int * arr,int size)
 {
     int choice=0;
