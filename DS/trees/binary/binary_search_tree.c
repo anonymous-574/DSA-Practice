@@ -244,6 +244,31 @@ struct node * delete(struct node * root , int value)
     return root;
 }
 
+
+int k=1;
+// kth largest in bst
+void large(struct node * root)
+{
+  if (root!=NULL)
+  {
+    large(root->right);
+    k--;
+    if (k==0)
+    {
+        printf("%d", root->data);
+    }
+    large(root->left);    
+  }
+  
+}
+
+void helper (struct node * root , int k1)
+{
+    k=k1;
+    large(root);
+}
+
+
 void free_tree (struct node * root)
 {
     if (root==NULL)
@@ -272,6 +297,9 @@ int main(int argc, char const *argv[])
     inorder(root);
     printf("\n\n\n");
     is_sorted_arr(root);
+
+    helper(root,2);
+
 
     for (int j = 0; j < 5; j++)
     {
