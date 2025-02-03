@@ -12,22 +12,14 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-
-
 class Solution {
 public:
-    int firstUniqChar(string s) {
-        
-        vector<int>v(26,0);
-        for (int i = 0; i < s.size(); i++){
-            v[s[i]-'a']++;
-        }        
+    vector<int> countBits(int n) {
+        vector<int> ans;
 
-        for (int i = 0; i < s.size(); i++){
-            if (v[s[i]-'a']==1){
-                return i;
-            }
+        for (int i = 0; i <=n; i++){
+            ans.push_back(__builtin_popcount(i));
         }
-    return -1;
+    return ans;
     }
 };

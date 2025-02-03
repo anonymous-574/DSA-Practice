@@ -9,40 +9,20 @@ class Solution {
 public:
 
     int countWords(vector<string>& words1, vector<string>& words2) {
-    unordered_set<string> set_word;
-    unordered_set<string> set_c;
-
-        for (int i = 0; i < words1.size(); i++)
-        {
-            if (set_word.find(words1[i]) == set_word.end())
-            {
-                set_word.insert(words1[i]);
-            }
+    unordered_map<string,int>mp1,mp2;
+    for (string i: words1){
+        mp1[i]++;
+    }
+    for (string i: words2){
+        mp2[i]++;
+    }
+    
+    int ans=0;
+    for (string i: words1){
+        if (mp1[i]==1 && mp2[i]==1){
+            ans++;
         }
-
-        for (int i = 0; i < words2.size(); i++)
-        {
-            /*
-            if (set_word.find(words2[i]) == set_word.end() && set_c.find(words2[i]) != set_c.end())
-            {
-                set_word.insert(words2[i]);
-            }
-            else
-            {
-                set_c.insert(words2[i]);
-            }
-            */
-            if (set_word.find(words2[i]) == set_word.end())
-            {
-                //no copy
-                continue;;
-            }
-            else
-            {
-                set_c.insert(words2[i]);
-            }
-        }
-
-        return set_c.size();
+    }
+     return ans;   
     }
 };

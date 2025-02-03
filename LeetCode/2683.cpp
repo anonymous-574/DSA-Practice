@@ -12,22 +12,21 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-
+class Solution {
+public:
+    bool doesValidArrayExist(vector<int>& derived) {
+        
+        int ans=0;
+        for (int i : derived){
+            ans=ans^i;
+        }
+        return ans==0;
+    }
+};
 
 class Solution {
 public:
-    int firstUniqChar(string s) {
-        
-        vector<int>v(26,0);
-        for (int i = 0; i < s.size(); i++){
-            v[s[i]-'a']++;
-        }        
-
-        for (int i = 0; i < s.size(); i++){
-            if (v[s[i]-'a']==1){
-                return i;
-            }
-        }
-    return -1;
+    bool doesValidArrayExist(vector<int>& derived) {
+        return accumulate(derived.begin(), derived.end(), 0) % 2 == 0;
     }
 };

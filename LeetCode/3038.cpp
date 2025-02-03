@@ -12,22 +12,20 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-
-
 class Solution {
 public:
-    int firstUniqChar(string s) {
-        
-        vector<int>v(26,0);
-        for (int i = 0; i < s.size(); i++){
-            v[s[i]-'a']++;
-        }        
+    int maxOperations(vector<int>& nums) {
+        int score = nums[0] + nums[1];
+        int ops = 1;
 
-        for (int i = 0; i < s.size(); i++){
-            if (v[s[i]-'a']==1){
-                return i;
+        for (int i = 2; i < nums.size() - 1; i += 2) {
+            if (nums[i] + nums[i + 1] == score) {
+                ops++;
+            } else {
+                break;
             }
         }
-    return -1;
+
+        return ops;
     }
 };

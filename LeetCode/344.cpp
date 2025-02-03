@@ -12,22 +12,15 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-
-
 class Solution {
 public:
-    int firstUniqChar(string s) {
-        
-        vector<int>v(26,0);
-        for (int i = 0; i < s.size(); i++){
-            v[s[i]-'a']++;
-        }        
+    void reverseString(vector<char>& s) {
+        int i=0,j=s.size()-1;
 
-        for (int i = 0; i < s.size(); i++){
-            if (v[s[i]-'a']==1){
-                return i;
-            }
+        while (i<j){
+            swap(s[i],s[j]);
+            i++;
+            j--;
         }
-    return -1;
     }
 };

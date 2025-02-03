@@ -12,22 +12,16 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-
-
 class Solution {
 public:
-    int firstUniqChar(string s) {
-        
-        vector<int>v(26,0);
-        for (int i = 0; i < s.size(); i++){
-            v[s[i]-'a']++;
-        }        
-
-        for (int i = 0; i < s.size(); i++){
-            if (v[s[i]-'a']==1){
-                return i;
-            }
+    int finalValueAfterOperations(vector<string>& operations) {
+        int ans = 0;
+        for (string i : operations) {
+            if (i[1] == '+')
+                ans++;
+            else
+                ans--;
         }
-    return -1;
+        return ans;
     }
 };

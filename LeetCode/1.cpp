@@ -28,3 +28,27 @@ public:
     return ans;
     }
 };
+
+
+//O(n)
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int,int>temp;
+
+        for (int i = 0; i < nums.size(); i++){
+            temp[nums[i]]=i;
+        }
+        
+        int comp;
+        for (int i = 0; i < nums.size(); i++){
+            comp=target-nums[i];
+            //second if to make sure that the same number isnt picked up again
+            if(temp.count(comp) && temp[comp]!=i){
+                return {i, temp[comp]};
+            }
+            
+        }
+    return {};
+    }
+};

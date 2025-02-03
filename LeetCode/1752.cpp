@@ -8,32 +8,29 @@ using namespace std;
 class Solution {
 public:
     bool check(vector<int>& nums) {
-        vector <int> sorted=nums;
-        sort(sorted.begin(),sorted.end());
+        vector<int> sorted = nums;
+        sort(sorted.begin(), sorted.end());
 
-        if (nums==sorted)
-        {
+        if (nums == sorted) {
             return true;
         }
-        
-        vector <int> rot=sorted;
-        for (int x = 0; x < nums.size(); x++)
-        {
-            for (int i = 0; i < nums.size(); i++)
-            {
-                rot[(i+x)%nums.size()]=sorted[i];
+
+        vector<int> rot = sorted;
+        for (int x = 0; x < nums.size(); x++) {
+            for (int i = 0; i < nums.size(); i++) {
+                rot[(i + x) % nums.size()] = sorted[i];
             }
-            if (rot==nums)
-            {
+            if (rot == nums) {
                 return true;
             }
-            
         }
         return false;
     }
 };
 
 //optimal
+//basic reasoning
+//in rotated array they can be only one violation of sorted rule
 class Solution {
 public:
     bool check(vector<int>& nums) {

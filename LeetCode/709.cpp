@@ -13,21 +13,14 @@
 using namespace std;
 
 
-
 class Solution {
 public:
-    int firstUniqChar(string s) {
-        
-        vector<int>v(26,0);
-        for (int i = 0; i < s.size(); i++){
-            v[s[i]-'a']++;
-        }        
-
-        for (int i = 0; i < s.size(); i++){
-            if (v[s[i]-'a']==1){
-                return i;
+    string toLowerCase(string s) {
+        for(int i = 0; i < s.length(); i++) {
+            if(s[i] >= 'A' && s[i] <= 'Z'){
+                s[i] = (char)(s[i]+32);
             }
         }
-    return -1;
+    return s;
     }
 };
