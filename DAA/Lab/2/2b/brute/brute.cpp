@@ -27,15 +27,14 @@ vector<pair<pair<int,int>,pair<int,int>>> brute(vector<pair<int,int>>graph){
             int check = (vx*v2y) - (vy*v2x);
             
             if(check>0)
-            up++;
+                up++;
             if(check<0)
-            down++;
+                down++;
             }
             if(up>0 && down>0){
-            continue;
+                continue;
             }
             else{
-                //printf("\nEdge: %d,%d to %d,%d", graph[i].first,graph[i].second,graph[j].first,graph[j].second);
                 ans.push_back(make_pair(graph[i],graph[j]));
             }
             
@@ -66,13 +65,11 @@ int main() {
         return 1;
     }
 
-    // Save graph points
     file << "Graph Points:\n";
     for (const auto& p : graph) {
         file << p.first << " " << p.second << "\n";
     }
 
-    // Save ans edges correctly
     file << "\nConvex Hull Edges:\n";
     for (const auto& edge : ans) {
         file << edge.first.first << " " << edge.first.second << " "

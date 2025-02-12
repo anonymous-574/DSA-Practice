@@ -100,13 +100,11 @@ int main() {
 
     ofstream file("points.txt");
 
-    // Save graph points
     file << "Graph Points:\n";
     for (int i = 0; i < graph.size(); i++) {
         file << graph[i].first << " " << graph[i].second << "\n";
     }
 
-    // Save ans points
     file << "\nConvex Hull Points (Answer):\n";
     for (int i = 0; i < ans.size(); i++) {
         file << ans[i].first << " " << ans[i].second << "\n";

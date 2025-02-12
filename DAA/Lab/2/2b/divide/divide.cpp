@@ -131,8 +131,6 @@ vector<pair<int, int>> merger(vector<pair<int, int> > a,
 
 }
 
-// Brute force algorithm to find convex hull for a set
-// of less than 6 points
 vector<pair<int, int>> bruteHull(vector<pair<int, int>> a)
 {
     // Take any pair of points from the set and check
@@ -189,12 +187,10 @@ vector<pair<int, int>> bruteHull(vector<pair<int, int>> a)
     return ret;
 }
 
-// Returns the convex hull for the given set of points
 vector<pair<int, int>> divide(vector<pair<int, int>> a)
 {
     // If the number of points is less than 6 then the
-    // function uses the brute algorithm to find the
-    // convex hull
+    // function uses the brute algorithm to find the convex hull
     if (a.size() <= 5)
         return bruteHull(a);
 
