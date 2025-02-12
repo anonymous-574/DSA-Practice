@@ -83,204 +83,70 @@ vector<pair<int, int>> graham(vector<pair<int, int>> graph) {
     return ans;
 }
 
-pair<int, int> mid;
-
-// determines the quadrant of a point
-// (used in compare())
-int quad(pair<int, int> p)
-{
-    if (p.first >= 0 && p.second >= 0)
-        return 1;
-    if (p.first <= 0 && p.second >= 0)
-        return 2;
-    if (p.first <= 0 && p.second <= 0)
-        return 3;
-    return 4;
+bool compareX(const pair<int, int> &a, const pair<int, int> &b) {
+    return a.first < b.first || (a.first == b.first && a.second < b.second);
 }
 
-// Checks whether the line is crossing the polygon
-int orientation(pair<int, int> a, pair<int, int> b,
-                pair<int, int> c)
-{
-    int res = (b.second-a.second)*(c.first-b.first) -
-            (c.second-b.second)*(b.first-a.first);
-
-    if (res == 0)
-        return 0;
-    if (res > 0)
-        return 1;
-    return -1;
+// Cross product to check turn direction
+int crossProduct(pair<int, int> A, pair<int, int> B, pair<int, int> C) {
+    return (B.first - A.first) * (C.second - A.second) - (B.second - A.second) * (C.first - A.first);
 }
 
-// compare function for sorting
-bool compare(pair<int, int> p1, pair<int, int> q1)
-{
-    pair<int, int> p = make_pair(p1.first - mid.first,
-                                p1.second - mid.second);
-    pair<int, int> q = make_pair(q1.first - mid.first,
-                                q1.second - mid.second);
+// Function to merge two convex hulls into a single convex hull
+vector<pair<int, int>> mergeHulls(const vector<pair<int, int>> &left, const vector<pair<int, int>> &right) {
+    vector<pair<int, int>> merged = left;
+    merged.insert(merged.end(), right.begin(), right.end());
 
-    int one = quad(p);
-    int two = quad(q);
+    // Sort the merged points to construct the convex hull correctly
+    sort(merged.begin(), merged.end(), compareX);
 
-    if (one != two)
-        return (one < two);
-    return (p.second*q.first < q.second*p.first);
-}
+    vector<pair<int, int>> hull;
 
-// Finds upper tangent of two polygons 'a' and 'b'
-// represented as two vectors.
-vector<pair<int, int>> merger(vector<pair<int, int> > a,
-                            vector<pair<int, int> > b)
-{
-    // n1 -> number of points in polygon a
-    // n2 -> number of points in polygon b
-    int n1 = a.size(), n2 = b.size();
-
-    int ia = 0, ib = 0;
-    for (int i=1; i<n1; i++)
-        if (a[i].first > a[ia].first)
-            ia = i;
-
-    // ib -> leftmost point of b
-    for (int i=1; i<n2; i++)
-        if (b[i].first < b[ib].first)
-            ib=i;
-
-    // finding the upper tangent
-    int inda = ia, indb = ib;
-    bool done = 0;
-    while (!done)
-    {
-        done = 1;
-        while (orientation(b[indb], a[inda], a[(inda+1)%n1]) >=0)
-            inda = (inda + 1) % n1;
-
-        while (orientation(a[inda], b[indb], b[(n2+indb-1)%n2]) <=0)
-        {
-            indb = (n2+indb-1)%n2;
-            done = 0;
+    // **Lower hull**
+    for (auto &p : merged) {
+        while (hull.size() >= 2 && crossProduct(hull[hull.size() - 2], hull[hull.size() - 1], p) <= 0) {
+            hull.pop_back();
         }
+        hull.push_back(p);
     }
 
-    int uppera = inda, upperb = indb;
-    inda = ia, indb=ib;
-    done = 0;
-    int g = 0;
-    while (!done)//finding the lower tangent
-    {
-        done = 1;
-        while (orientation(a[inda], b[indb], b[(indb+1)%n2])>=0)
-            indb=(indb+1)%n2;
-
-        while (orientation(b[indb], a[inda], a[(n1+inda-1)%n1])<=0)
-        {
-            inda=(n1+inda-1)%n1;
-            done=0;
+    // **Upper hull**
+    int lowerSize = hull.size();
+    for (int i = merged.size() - 2; i >= 0; i--) {
+        while (hull.size() > lowerSize && crossProduct(hull[hull.size() - 2], hull[hull.size() - 1], merged[i]) <= 0) {
+            hull.pop_back();
         }
+        hull.push_back(merged[i]);
     }
 
-    int lowera = inda, lowerb = indb;
-    vector<pair<int, int>> ret;
+    // Remove the last point because it is duplicated at the start
+    hull.pop_back();
 
-    //ret contains the convex hull after merging the two convex hulls
-    //with the points sorted in anti-clockwise order
-    int ind = uppera;
-    ret.push_back(a[uppera]);
-    while (ind != lowera)
-    {
-        ind = (ind+1)%n1;
-        ret.push_back(a[ind]);
-    }
-
-    ind = lowerb;
-    ret.push_back(b[lowerb]);
-    while (ind != upperb)
-    {
-        ind = (ind+1)%n2;
-        ret.push_back(b[ind]);
-    }
-    return ret;
-
+    return hull;
 }
 
-vector<pair<int, int>> bruteHull(vector<pair<int, int>> a)
-{
-    // Take any pair of points from the set and check
-    // whether it is the edge of the convex hull or not.
-    // if all the remaining points are on the same side
-    // of the line then the line is the edge of convex
-    // hull otherwise not
-    set<pair<int, int> >s;
-
-    for (int i=0; i<a.size(); i++)
-    {
-        for (int j=i+1; j<a.size(); j++)
-        {
-            int x1 = a[i].first, x2 = a[j].first;
-            int y1 = a[i].second, y2 = a[j].second;
-
-            int a1 = y1-y2;
-            int b1 = x2-x1;
-            int c1 = x1*y2-y1*x2;
-            int pos = 0, neg = 0;
-            for (int k=0; k<a.size(); k++)
-            {
-                if (a1*a[k].first+b1*a[k].second+c1 <= 0)
-                    neg++;
-                if (a1*a[k].first+b1*a[k].second+c1 >= 0)
-                    pos++;
-            }
-            if (pos == a.size() || neg == a.size())
-            {
-                s.insert(a[i]);
-                s.insert(a[j]);
-            }
-        }
+// Divide and conquer function
+vector<pair<int, int>> divideAndConquer(vector<pair<int, int>> &points) {
+    int n = points.size();
+    if (n <= 3) {
+        sort(points.begin(), points.end(), compareX);
+        return points;  // Base case: 3 or fewer points already form a convex shape
     }
 
-    vector<pair<int, int>>ret;
-    for (auto e:s)
-        ret.push_back(e);
+    int mid = n / 2;
+    vector<pair<int, int>> left(points.begin(), points.begin() + mid);
+    vector<pair<int, int>> right(points.begin() + mid, points.end());
 
-    // Sorting the points in the anti-clockwise order
-    mid = {0, 0};
-    int n = ret.size();
-    for (int i=0; i<n; i++)
-    {
-        mid.first += ret[i].first;
-        mid.second += ret[i].second;
-        ret[i].first *= n;
-        ret[i].second *= n;
-    }
-    sort(ret.begin(), ret.end(), compare);
-    for (int i=0; i<n; i++)
-        ret[i] = make_pair(ret[i].first/n, ret[i].second/n);
+    vector<pair<int, int>> leftHull = divideAndConquer(left);
+    vector<pair<int, int>> rightHull = divideAndConquer(right);
 
-    return ret;
+    return mergeHulls(leftHull, rightHull);
 }
 
-vector<pair<int, int>> divide(vector<pair<int, int>> a)
-{
-    // If the number of points is less than 6 then the
-    // function uses the brute algorithm to find the convex hull
-    if (a.size() <= 5)
-        return bruteHull(a);
-
-    // left contains the left half points
-    // right contains the right half points
-    vector<pair<int, int>>left, right;
-    for (int i=0; i<a.size()/2; i++)
-        left.push_back(a[i]);
-    for (int i=a.size()/2; i<a.size(); i++)
-        right.push_back(a[i]);
-
-    // convex hull for the left and right sets
-    vector<pair<int, int>>left_hull = divide(left);
-    vector<pair<int, int>>right_hull = divide(right);
-
-    // merging the convex hulls
-    return merger(left_hull, right_hull);
+// Main function to compute the convex hull
+vector<pair<int, int>> computeConvexHull(vector<pair<int, int>> &points) {
+    sort(points.begin(), points.end(), compareX);
+    return divideAndConquer(points);
 }
 
 vector<pair<pair<int,int>,pair<int,int>>> brute(vector<pair<int,int>>graph){
@@ -342,7 +208,7 @@ int main() {
     long long brute_time = duration<long long, nano>(end2 - start1).count();
 
     start1 = high_resolution_clock::now();
-    ans = divide(graph);
+    ans = computeConvexHull(graph);
     auto end3 = high_resolution_clock::now();
     long long dc_time = duration<long long, nano>(end3 - start1).count();
 
@@ -376,7 +242,7 @@ int main() {
 
         start1 = high_resolution_clock::now();
         sort(graph_copy.begin(),graph_copy.end());
-        ans = divide(graph_copy);
+        ans = computeConvexHull(graph_copy);
         end3 = high_resolution_clock::now();
         dc_time = duration<long long, nano>(end3 - start1).count();
 
@@ -384,8 +250,6 @@ int main() {
     }
 
     // Close the file
-    file.close();
-    cout << "Times saved to time.txt" << endl;
-    
+    file.close();    
     return 0;
 }

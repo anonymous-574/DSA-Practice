@@ -77,6 +77,5 @@ int main() {
     }
 
     file.close();
-    cout << "Points saved to points.txt" << endl;
     return 0;
 }
