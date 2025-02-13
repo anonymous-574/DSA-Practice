@@ -184,7 +184,6 @@ vector<pair<pair<int,int>,pair<int,int>>> brute(vector<pair<int,int>>graph){
 
 
 int main() {
-    // Open the output file for storing the times
     ofstream file("time.txt");
     file << "Number of Points, Graham Scan Time (ns), Brute Force Time (ns), Divide and Conquer Time (ns)\n";
 
@@ -216,9 +215,7 @@ int main() {
 
     file << 4 << " " << graham_time << " " << brute_time << " " << dc_time << "\n";
 
-    // Iterate from 5 points to 100 points
     for (int numPoints = 5; numPoints <= 100; ++numPoints) {
-        // Add one new random point to the existing set
         int x = rand() % 100 + 1;
         int y = rand() % 100 + 1;
         graph.push_back(make_pair(x, y));
@@ -227,7 +224,6 @@ int main() {
         vector<pair<int, int>> graph_copy = graph;
         vector<pair<pair<int, int>, pair<int, int>>> brute_copy = brute(graph_copy);
 
-        // Measure the time taken for each algorithm with the new set of points
         start1 = high_resolution_clock::now();
         ans = graham(graph_copy);
         end1 = high_resolution_clock::now();
@@ -240,7 +236,7 @@ int main() {
         end2 = high_resolution_clock::now();
         brute_time = duration<long long, nano>(end2 - start1).count();
 
-        graph_copy = graph; // Reset to the original graph
+        graph_copy = graph; 
 
         start1 = high_resolution_clock::now();
         sort(graph_copy.begin(),graph_copy.end());
