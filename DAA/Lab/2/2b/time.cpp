@@ -181,6 +181,8 @@ vector<pair<pair<int,int>,pair<int,int>>> brute(vector<pair<int,int>>graph){
     return ans;
 }
 
+
+
 int main() {
     // Open the output file for storing the times
     ofstream file("time.txt");
