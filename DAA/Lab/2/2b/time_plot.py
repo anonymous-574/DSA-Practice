@@ -7,7 +7,7 @@ graham_times = []
 brute_times = []
 dc_times = []
 
-with open('time.txt', 'r') as file:
+with open('D:/code/DSA/DAA/Lab/2/2b/time.txt', 'r', encoding="utf-8") as file:
     lines = file.readlines()
     # Skip header line
     for line in lines[1:]:
@@ -31,6 +31,7 @@ plt.plot(num_points, graham_times, label='Graham Scan', color='blue', marker='o'
 plt.plot(num_points, brute_times, label='Brute Force', color='red', marker='s')
 plt.plot(num_points, dc_times, label='Divide and Conquer', color='green', marker='^')
 
+plt.yscale('log')
 # Adding titles and labels
 plt.title('Algorithm Time Comparison')
 plt.xlabel('Number of Points')
