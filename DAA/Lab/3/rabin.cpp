@@ -10,46 +10,38 @@ using namespace std;
 using namespace chrono;
 
 int search(const string& text, const string& pattern) {
-    int n=text.length(),m=pattern.length();
-    int txt_val=0,pat_val=0;
-    //a large prime no , size of chars in input (ascii) 
-    int q =INT_MAX,d=256;
+    int n = text.length(), m = pattern.length();
+    int txt_val = 0, pat_val = 0;
+    int q = 101, d = 256;
 
-    int hash=1;
-    for (int i = 0; i < m; i++){
-        hash = (hash*d)%q;
+    int hash = 1;
+    for (int i = 0; i < m - 1; i++) {
+        hash = (hash * d) % q;
     }
-    
-    //the initial values
-    for (int i = 0; i < m; i++){
-        txt_val=(txt_val*d + text[i])%q;
-        pat_val=(pat_val*d + pattern[i])%q;
+
+    for (int i = 0; i < m; i++) {
+        txt_val = (txt_val * d + text[i]) % q;
+        pat_val = (pat_val * d + pattern[i]) % q;
     }
-    
+
     int y;
-    for (int x = 0; x < n-m; x++){
-        if (pat_val==txt_val){
-            //check the chars
-            for (y = 0; y < m; y++){
-                if (text[x+y]!=pattern[y]){
+    for (int x = 0; x <= n - m; x++) {
+        if (pat_val == txt_val) {
+            for (y = 0; y < m; y++) {
+                if (text[x + y] != pattern[y]) {
                     break;
                 }
             }
-
-            if (y==m){
+            if (y == m) {
                 return x;
             }
         }
-        if (x<n-m){
-            txt_val=(d*(txt_val-text[x]*hash) + text[x+m])%q;
-
-            if (txt_val<0){
-                txt_val+=q;
+        if (x < n - m) {
+            txt_val = (d * (txt_val - text[x] * hash) + text[x + m]) % q;
+            if (txt_val < 0) {
+                txt_val += q;
             }
-            
         }
-        
-
     }
     return -1;
 }
@@ -57,8 +49,9 @@ int search(const string& text, const string& pattern) {
 void benchmarkSearch(const string& filename) {
     ifstream file(filename);
     ofstream resultOutput("results.csv");
+    ofstream stringsOutput("strings.txt");
 
-    if (!file || !resultOutput) {
+    if (!file || !resultOutput || !stringsOutput) {
         cerr << "Error opening file!" << endl;
         return;
     }
@@ -69,7 +62,6 @@ void benchmarkSearch(const string& filename) {
 
     srand(time(0));
 
-    // Write CSV header
     resultOutput << "n,m,time_ns,index\n";
 
     for (int n : sizes) {
@@ -88,16 +80,21 @@ void benchmarkSearch(const string& filename) {
 
             auto timeTaken = duration<long long, nano>(end1 - start1).count();
 
-            // Write results in CSV format
             resultOutput << n << "," << m << "," << timeTaken << "," << index << "\n";
+            stringsOutput << "Text Size: " << n << "\n";
+            stringsOutput << "Pattern Size: " << m << "\n";
+            stringsOutput << "Text: " << text << "\n";
+            stringsOutput << "Pattern: " << pattern << "\n";
+            stringsOutput << "Found at index: " << index << "\n\n";
         }
     }
     file.close();
     resultOutput.close();
+    stringsOutput.close();
 }
 
 int main() {
     benchmarkSearch("big.txt");
-    cout << "Benchmark completed. Check results.csv for results." << endl;
+    cout << "Benchmark completed. Check results.csv and strings.txt for results." << endl;
     return 0;
 }
