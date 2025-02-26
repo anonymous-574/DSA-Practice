@@ -160,7 +160,7 @@ vector<vector<int>> kruskal(const vector<vector<int>>& graph) {
 }
 
 void saveMatrixToFile(const vector<vector<int>>& matrix, const string& filename, int vertices) {
-    ofstream file(filename, ios::app); // Append mode
+    ofstream file(filename, ios::app);
     if (!file) {
         cerr << "Error opening file: " << filename << endl;
         return;
@@ -177,7 +177,7 @@ void saveMatrixToFile(const vector<vector<int>>& matrix, const string& filename,
 }
 
 void saveTreeToFile(const vector<vector<int>>& tree, const string& filename, string algo, int vertices) {
-    ofstream file(filename, ios::app); // Append mode
+    ofstream file(filename, ios::app);
     if (!file) {
         cerr << "Error opening file: " << filename << endl;
         return;
@@ -193,8 +193,8 @@ void saveTreeToFile(const vector<vector<int>>& tree, const string& filename, str
 int main() {
     undirected_graph graph;
     ofstream timeFile("time.txt", ios::trunc);
-    ofstream matrixFile("matrix.txt", ios::trunc); // Clear matrix file at start
-    ofstream treeFile("tree.txt", ios::trunc); // Clear tree file at start
+    ofstream matrixFile("matrix.txt", ios::trunc); 
+    ofstream treeFile("tree.txt", ios::trunc);
 
     timeFile << "number, prim, kruskal\n";
 
