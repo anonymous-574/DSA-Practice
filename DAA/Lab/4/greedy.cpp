@@ -159,8 +159,14 @@ vector<vector<int>> kruskal(const vector<vector<int>>& graph) {
     return tree;
 }
 
-void saveMatrixToFile(const vector<vector<int>>& matrix, const string& filename) {
-    ofstream file(filename);
+void saveMatrixToFile(const vector<vector<int>>& matrix, const string& filename, int vertices) {
+    ofstream file(filename, ios::app); // Append mode
+    if (!file) {
+        cerr << "Error opening file: " << filename << endl;
+        return;
+    }
+
+    file << "Adjacency Matrix for " << vertices << " vertices:\n";
     for (const auto& row : matrix) {
         for (int val : row) {
             file << val << "\t";
@@ -170,8 +176,14 @@ void saveMatrixToFile(const vector<vector<int>>& matrix, const string& filename)
     file << "----------------------\n";
 }
 
-void saveTreeToFile(const vector<vector<int>>& tree, const string& filename) {
-    ofstream file(filename);
+void saveTreeToFile(const vector<vector<int>>& tree, const string& filename, string algo, int vertices) {
+    ofstream file(filename, ios::app); // Append mode
+    if (!file) {
+        cerr << "Error opening file: " << filename << endl;
+        return;
+    }
+
+    file << algo << " Tree for " << vertices << " vertices:\n";
     for (const auto& edge : tree) {
         file << edge[0] << ", " << edge[1] << ", " << edge[2] << "\n";
     }
@@ -180,9 +192,10 @@ void saveTreeToFile(const vector<vector<int>>& tree, const string& filename) {
 
 int main() {
     undirected_graph graph;
-    ofstream timeFile("time.txt");
+    ofstream timeFile("time.txt", ios::trunc);
+    ofstream matrixFile("matrix.txt", ios::trunc); // Clear matrix file at start
+    ofstream treeFile("tree.txt", ios::trunc); // Clear tree file at start
 
-    // Write header
     timeFile << "number, prim, kruskal\n";
 
     vector<int> vertex_counts = {8, 15, 20};
@@ -190,7 +203,7 @@ int main() {
     for (int vertices : vertex_counts) {
         vector<vector<int>> adj_matrix = graph.generate(vertices, 50);
 
-        saveMatrixToFile(adj_matrix, "matrix.txt");
+        saveMatrixToFile(adj_matrix, "matrix.txt", vertices);
 
         auto start1 = high_resolution_clock::now();
         vector<vector<int>> prim_tree = prims(adj_matrix);
@@ -204,11 +217,8 @@ int main() {
 
         timeFile << vertices << ", " << prim_time << ", " << kruskal_time << "\n";
 
-        saveTreeToFile(prim_tree, "tree.txt");
-        saveTreeToFile(kruskal_tree, "tree.txt");
+        saveTreeToFile(prim_tree, "tree.txt", "Prim's", vertices);
+        saveTreeToFile(kruskal_tree, "tree.txt", "Kruskal's", vertices);
     }
-
-    timeFile.close();
-    cout << "Graphs generated, times stored in time.txt, matrices stored in matrix.txt, trees stored in tree.txt\n";
     return 0;
 }
