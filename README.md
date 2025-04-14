@@ -18,7 +18,7 @@ This repository contains a comprehensive collection of **Data Structures and Alg
 This repository contains:  
 ✅ **DSA Implementations**: Covers arrays, linked lists, stacks, queues, trees, graphs, sorting, and more.  
 ✅ **DAA Algorithms**: Includes Divide & Conquer, Dynamic Programming, Greedy, Backtracking, and lab experiments.  
-✅ **LeetCode Solutions**: Practice problems solved with optimal approaches.  
+✅ **LeetCode and Codeforces Solutions**: Practice problems solved with optimal approaches.  
 ✅ **Well-structured Code**: Each section is organized for easy navigation and understanding.  
 ✅ **Useful for Interview Prep & Competitive Programming**  
 
