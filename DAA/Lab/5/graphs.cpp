@@ -59,22 +59,24 @@ void bellmanFord(int V, vector<vector<int>> &adj, int src, ofstream &outfile) {
         }
     }
 
-    for (int i = 0; i < V - 1; i++) {
-        for (auto &[u, v, weight] : edges) {
-            if (dist[u] != INF && dist[u] + weight < dist[v]) {
-                dist[v] = dist[u] + weight;
-                parent[v] = u;
-            }
-        }
-    }
+    //use CPP 23
 
-    for (auto &[u, v, weight] : edges) {
-        if (dist[u] != INF && dist[u] + weight < dist[v]) {
-            outfile << "Algorithm Used: Bellman-Ford\n";
-            outfile << "Graph contains a negative weight cycle\n";
-            return;
-        }
-    }
+    //for (int i = 0; i < V - 1; i++) {
+    //    for (auto &[u, v, weight] : edges) {
+    //        if (dist[u] != INF && dist[u] + weight < dist[v]) {
+    //            dist[v] = dist[u] + weight;
+    //            parent[v] = u;
+    //        }
+    //    }
+    //}
+
+    //for (auto &[u, v, weight] : edges) {
+    //    if (dist[u] != INF && dist[u] + weight < dist[v]) {
+    //        outfile << "Algorithm Used: Bellman-Ford\n";
+    //        outfile << "Graph contains a negative weight cycle\n";
+    //        return;
+    //    }
+    //}
 
     outfile << "Algorithm Used: Bellman-Ford\n";
     outfile << "Bellman-Ford Shortest Paths:\n";
