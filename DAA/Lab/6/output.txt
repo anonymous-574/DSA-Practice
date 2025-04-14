@@ -1,0 +1,33 @@
+Matrix dimensions array p: 32 8 32 16 64 16 32 32 32 64 8
+
+Matrix m (Optimal Multiplication Costs):
+       0    8192    8192   28672   24576   32768   40960   49152   73728   60416
+       0       0    4096   12288   20480   24576   32768   40960   57344   58368
+       0       0       0   32768   24576   40960   57344   73728  122880   57344
+       0       0       0       0   16384   24576   40960   57344   90112   53248
+       0       0       0       0       0   32768   49152   65536  131072   45056
+       0       0       0       0       0       0   16384   32768   65536   36864
+       0       0       0       0       0       0       0   32768   98304   32768
+       0       0       0       0       0       0       0       0   65536   24576
+       0       0       0       0       0       0       0       0       0   16384
+       0       0       0       0       0       0       0       0       0       0
+
+Matrix s (Optimal Splits):
+   0   1   1   1   1   1   1   1   1   1
+   0   0   2   3   4   5   6   7   8   3
+   0   0   0   3   3   3   3   3   3   3
+   0   0   0   0   4   5   5   5   8   4
+   0   0   0   0   0   5   5   5   5   5
+   0   0   0   0   0   0   6   7   8   6
+   0   0   0   0   0   0   0   7   8   7
+   0   0   0   0   0   0   0   0   8   8
+   0   0   0   0   0   0   0   0   0   9
+   0   0   0   0   0   0   0   0   0   0
+
+Optimal Parenthesization: (M1 X ((M2 X M3) X (M4 X (M5 X (M6 X (M7 X (M8 X (M9 X M10))))))))
+
+Timing Results (in milliseconds):
+1. Trivial order + Regular Multiplication: 1 ms
+2. Optimal order + Regular Multiplication: 0 ms
+3. Trivial order + Strassen Multiplication: 804 ms
+4. Optimal order + Strassen Multiplication: 581 ms
