@@ -1,0 +1,106 @@
+Enter the initial state of the 15-puzzle (enter 0 for the blank tile):
+Tile 1: 5
+Tile 2: 1
+Tile 3: 2
+Tile 4: 3
+Tile 5: 9
+Tile 6: 6
+Tile 7: 7
+Tile 8: 4
+Tile 9: 13
+Tile 10: 10
+Tile 11: 11
+Tile 12: 8
+Tile 13: 14
+Tile 14: 15
+Tile 15: 0
+Tile 16: 12
+Solving 15-Puzzle with Branch and Bound:
+Initial State:
+   5   1   2   3
+   9   6   7   4
+  13  10  11   8
+  14  15      12
+
+Goal State:
+   1   2   3   4
+   5   6   7   8
+   9  10  11  12
+  13  14  15
+
+Level: 0, Move: Start, f = 11, g = 0, h = 11
+   5   1   2   3
+   9   6   7   4
+  13  10  11   8
+  14  15      12
+
+Level: 1, Move: Left, f = 11, g = 1, h = 10
+   5   1   2   3
+   9   6   7   4
+  13  10  11   8
+  14      15  12
+
+Level: 2, Move: Left, f = 11, g = 2, h = 9
+   5   1   2   3
+   9   6   7   4
+  13  10  11   8
+      14  15  12
+
+Level: 3, Move: Up, f = 11, g = 3, h = 8
+   5   1   2   3
+   9   6   7   4
+      10  11   8
+  13  14  15  12
+
+Level: 4, Move: Up, f = 11, g = 4, h = 7
+   5   1   2   3
+       6   7   4
+   9  10  11   8
+  13  14  15  12
+
+Level: 5, Move: Up, f = 11, g = 5, h = 6
+       1   2   3
+   5   6   7   4
+   9  10  11   8
+  13  14  15  12
+
+Level: 6, Move: Right, f = 11, g = 6, h = 5
+   1       2   3
+   5   6   7   4
+   9  10  11   8
+  13  14  15  12
+
+Level: 7, Move: Right, f = 11, g = 7, h = 4
+   1   2       3
+   5   6   7   4
+   9  10  11   8
+  13  14  15  12
+
+Level: 8, Move: Right, f = 11, g = 8, h = 3
+   1   2   3
+   5   6   7   4
+   9  10  11   8
+  13  14  15  12
+
+Level: 9, Move: Down, f = 11, g = 9, h = 2
+   1   2   3   4
+   5   6   7
+   9  10  11   8
+  13  14  15  12
+
+Level: 10, Move: Down, f = 11, g = 10, h = 1
+   1   2   3   4
+   5   6   7   8
+   9  10  11
+  13  14  15  12
+
+Level: 11, Move: Down, f = 11, g = 11, h = 0
+   1   2   3   4
+   5   6   7   8
+   9  10  11  12
+  13  14  15
+
+Goal state found
+Total nodes explored: 12
+Maximum queue size: 9
+Path: Left -> Left -> Up -> Up -> Up -> Right -> Right -> Right -> Down -> Down -> Down -> Goal
