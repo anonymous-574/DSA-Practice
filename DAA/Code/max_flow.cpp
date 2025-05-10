@@ -5,6 +5,8 @@ const int INF = 1e9;
 
 vector<vector<int>> flow, residual, capacity;
 
+
+//B-F
 // Utility to print shortest path
 void printPath(vector<int>& parent, int v) {
     if (parent[v] == -1) {
@@ -60,6 +62,8 @@ void bellmanFord(int V, vector<vector<int>> &adj, int src) {
     }
 }
 
+
+//FORD FULKERSON
 // DFS for augmenting path
 int dfs(int V, int s, int t, vector<int>& visited, vector<int>& parent) {
     if (s == t) return 1;
