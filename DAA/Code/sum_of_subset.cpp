@@ -3,30 +3,33 @@ using namespace std;
 
 int found = 0;
 
-void sumSubset(int set[],int n,int index,int currSum, int t,int sol[],int solIndex){
-    if(currSum == t){
+void sumSubset(int set[],int n,int Setindex,int currSum, int target,int sol[],int solIndex){
+    if(currSum == target){
         cout << "[";
         for(int i =0;i<solIndex;i++){
             cout << sol[i];
-            if(i < solIndex-1) cout<<",";
+            
+            //just to look nice, ignore
+            //if(i < solIndex-1) cout<<",";
         }
         cout << "]\n";
         found = 1;
         return;
     }
-    if(index>=n || currSum > t) return;
-    sol[solIndex] = set[index];
-    sumSubset(set,n,index+1,currSum + set[index],t,sol,solIndex + 1);
-    sumSubset(set,n,index+1,currSum,t,sol,solIndex);
+
+    if(Setindex>=n || currSum > target) return;
+    sol[solIndex] = set[Setindex];
+    sumSubset(set,n,Setindex+1,currSum + set[Setindex],target,sol,solIndex + 1);
+    sumSubset(set,n,Setindex+1,currSum,target,sol,solIndex);
 
 }
 
 int main(){
-    int n, t;
+    int n, target;
     cout << "Enter number of elements in set and target: ";
-    cin >> n >> t; 
+    cin >> n >> target; 
     int set[n],sol[n];
     for(int i = 0;i < n;i++) cin>>set[i];
-    sumSubset(set, n, 0, 0, t, sol, 0);
+    sumSubset(set, n, 0, 0, target, sol, 0);
     if(!found) cout << "No solution found";
 }

@@ -1,47 +1,50 @@
 #include <bits/stdc++.h>
 using namespace std;
-void approx_vertex(int V, int E, vector<pair<int,int>> &edges){
-    vector<bool> inCover(V,false);
-    vector<bool> active(E,true);
 
-    vector<vector<int>> incident(V);
-    for(int i = 0; i<E; i++){
+vector<int> approximateVertexCover(int V, const vector<pair<int, int>> &edges) {
+    vector<bool> visited(V, false);
+    vector<int> cover;
+
+    for (int i = 0; i < edges.size(); ++i) {
         int u = edges[i].first;
         int v = edges[i].second;
-        incident[u].push_back(i);
-        incident[v].push_back(i);
-    }
-    int nextEdge = 0;
-
-    while(true){
-        while(nextEdge < E && !active[nextEdge])
-            nextEdge++;
-        if(nextEdge == E) break;
-
-        int u   = edges[nextEdge].first;
-        int v   = edges[nextEdge].second;
-
-        inCover[u] = inCover[v] = true;
-
-        cout <<"Edge "<< u << " - " << v << " covered\n";
-
-        for(int j : incident[u]) active[j] = false;
-        for(int j : incident[v]) active[j] = false;  
-    }
-    int c =0;
-    cout<<"Vertex: ";
-    for (int i = 0; i < V; i++)
-        if (inCover[i]){
-            cout << i <<" ";c++;
+        if (!visited[u] && !visited[v]) {
+            visited[u] = true;
+            visited[v] = true;
+            cover.push_back(u);
+            cover.push_back(v);
         }
-            
-    cout << "Cover size = " << c;
+    }
+
+    return cover;
 }
-int main(){
-    int V,E;
-    cin>>V>>E;
-    vector<pair<int,int>> edges(E);
-    for(int i =0;i < E;i++) cin>>edges[i].first>>edges[i].second;
-    approx_vertex(V,E,edges);
+
+int main() {
+    int V, E;
+    cout << "Enter number of vertices: ";
+    cin >> V;
+    cout << "Enter number of edges: ";
+    cin >> E;
+
+    vector<pair<int, int>> edges;
+    cout << "Enter " << E << " edges (format: u v):\n";
+    for (int i = 0; i < E; ++i) {
+        int u, v;
+        cin >> u >> v;
+        edges.push_back({u, v});
+    }
+
+    // Print edge list
+    cout << "\nGraph Edge List:\n";
+    for (int i = 0; i < E; ++i)
+        cout << edges[i].first << " - " << edges[i].second << "\n";
+
+    // Get and print vertex cover
+    vector<int> cover = approximateVertexCover(V, edges);
+    cout << "\nVertex Cover (approximate): ";
+    for (int i = 0; i < cover.size(); ++i)
+        cout << cover[i] << " ";
+    cout << "\n";
+
     return 0;
 }
