@@ -2,11 +2,7 @@
 using namespace std;
 
 // ---------- For Prim's ----------
-struct PrimEdge {
-    int to, weight;
-};
-
-void prim(int start, vector<vector<PrimEdge>> &graph) {
+void prim(int start, vector<vector<pair<int, int>>> &graph) {
     int n = graph.size();
     vector<int> key(n, INT_MAX), parent(n, -1);
     vector<bool> inMST(n, false);
@@ -23,8 +19,8 @@ void prim(int start, vector<vector<PrimEdge>> &graph) {
         inMST[u] = true;
         totalWeight += key[u];
 
-        for (const PrimEdge &e : graph[u]) {
-            int v = e.to, weight = e.weight;
+        for (const auto &e : graph[u]) {
+            int v = e.first, weight = e.second;
             if (!inMST[v] && weight < key[v]) {
                 key[v] = weight;
                 parent[v] = u;
@@ -42,12 +38,8 @@ void prim(int start, vector<vector<PrimEdge>> &graph) {
 }
 
 // ---------- For Kruskal's ----------
-struct KruskalEdge {
-    int u, v, weight;
-};
-
-bool cmp(KruskalEdge a, KruskalEdge b) {
-    return a.weight < b.weight;
+bool cmp(const tuple<int, int, int>& a, const tuple<int, int, int>& b) {
+    return get<2>(a) < get<2>(b); // Compare based on the weight
 }
 
 int findSet(int parent[], int x) {
@@ -69,7 +61,7 @@ void unionSet(int parent[], int rank[], int x, int y) {
     }
 }
 
-void kruskal(int V, vector<KruskalEdge> &edges) {
+void kruskal(int V, vector<tuple<int, int, int>>& edges) {
     int parent[V], rank[V];
     for (int i = 0; i < V; i++) {
         parent[i] = i;
@@ -82,7 +74,7 @@ void kruskal(int V, vector<KruskalEdge> &edges) {
     cout << "\nEdges in the MST (Kruskal's):\n";
     for (auto &e : edges) {
         if (edgeUsed == V - 1) break;
-        int u = e.u, v = e.v, w = e.weight;
+        int u = get<0>(e), v = get<1>(e), w = get<2>(e);
         if (findSet(parent, u) != findSet(parent, v)) {
             unionSet(parent, rank, u, v);
             cout << u << " - " << v << " (Weight: " << w << ")\n";
@@ -103,7 +95,7 @@ int main() {
     cin >> algoChoice;
 
     if (algoChoice == 1) {
-        vector<vector<PrimEdge>> graph(V);
+        vector<vector<pair<int, int>>> graph(V);
         cout << "Enter each edge as: from to weight\n";
         for (int i = 0; i < E; ++i) {
             int u, v, w;
@@ -116,10 +108,12 @@ int main() {
         cin >> start;
         prim(start, graph);
     } else if (algoChoice == 2) {
-        vector<KruskalEdge> edges(E);
+        vector<tuple<int, int, int>> edges(E);
         cout << "Enter each edge as: from to weight\n";
         for (int i = 0; i < E; ++i) {
-            cin >> edges[i].u >> edges[i].v >> edges[i].weight;
+            int u, v, w;
+            cin >> u >> v >> w;
+            edges[i] = make_tuple(u, v, w);
         }
         kruskal(V, edges);
     } else {

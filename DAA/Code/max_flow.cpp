@@ -5,8 +5,6 @@ const int INF = 1e9;
 
 vector<vector<int>> flow, residual, capacity;
 
-
-//B-F
 // Utility to print shortest path
 void printPath(vector<int>& parent, int v) {
     if (parent[v] == -1) {
@@ -18,7 +16,7 @@ void printPath(vector<int>& parent, int v) {
 }
 
 // Bellman-Ford for shortest paths from source
-void bellmanFord(int V, vector<vector<int>> &adj, int src) {
+void bellmanFord(int V, vector<vector<int>>& adj, int src) {
     vector<int> dist(V, INF);
     vector<int> parent(V, -1);
     dist[src] = 0;
@@ -62,9 +60,7 @@ void bellmanFord(int V, vector<vector<int>> &adj, int src) {
     }
 }
 
-
-//FORD FULKERSON
-// DFS for augmenting path
+// DFS for augmenting path (Ford-Fulkerson)
 int dfs(int V, int s, int t, vector<int>& visited, vector<int>& parent) {
     if (s == t) return 1;
     visited[s] = 1;
@@ -77,7 +73,7 @@ int dfs(int V, int s, int t, vector<int>& visited, vector<int>& parent) {
     return 0;
 }
 
-// Ford-Fulkerson algorithm
+// Ford-Fulkerson algorithm (Max Flow)
 void Ford_Fulkerson(int V, int s, int t) {
     flow.assign(V, vector<int>(V, 0));
     int maxFlow = 0;

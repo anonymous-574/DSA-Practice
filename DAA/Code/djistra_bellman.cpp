@@ -1,13 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// ---------- For Dijkstra's ----------
-struct DijkstraEdge {
-    int to, weight;
-};
-
-void dijkstra(int start, const vector<vector<DijkstraEdge>>& graph) {
-    int n = graph.size();
+void dijkstra(int start, const vector<vector<pair<int, int>>>& adj) {
+    int n = adj.size();
     vector<int> dist(n, INT_MAX);
     dist[start] = 0;
 
@@ -21,8 +16,8 @@ void dijkstra(int start, const vector<vector<DijkstraEdge>>& graph) {
 
         if (d > dist[u]) continue;
 
-        for (const DijkstraEdge& e : graph[u]) {
-            int v = e.to, weight = e.weight;
+        for (auto& edge : adj[u]) {
+            int v = edge.first, weight = edge.second;
             if (dist[u] + weight < dist[v]) {
                 dist[v] = dist[u] + weight;
                 pq.push({dist[v], v});
@@ -38,27 +33,30 @@ void dijkstra(int start, const vector<vector<DijkstraEdge>>& graph) {
     }
 }
 
-// ---------- For Bellman-Ford ----------
-struct BellmanEdge {
-    int u, v, wt;
-};
-
-void bellman(int V, int E, vector<BellmanEdge>& edges, int source) {
+void bellman(int V, const vector<vector<pair<int, int>>>& adj, int source) {
     vector<int> dist(V, INT_MAX);
     dist[source] = 0;
 
+    // Flatten the adjacency list into edges
+    vector<tuple<int, int, int>> edges;
+    for (int u = 0; u < V; ++u) {
+        for (auto& edge : adj[u]) {
+            edges.emplace_back(u, edge.first, edge.second);
+        }
+    }
+
     for (int i = 0; i < V - 1; ++i) {
-        for (int j = 0; j < E; ++j) {
-            int u = edges[j].u, v = edges[j].v, wt = edges[j].wt;
+        for (auto& edge : edges) {
+            int u = get<0>(edge), v = get<1>(edge), wt = get<2>(edge);
             if (dist[u] != INT_MAX && dist[u] + wt < dist[v]) {
                 dist[v] = dist[u] + wt;
             }
         }
     }
 
-    // Check for negative-weight cycles
-    for (int j = 0; j < E; ++j) {
-        int u = edges[j].u, v = edges[j].v, wt = edges[j].wt;
+    // Check for negative cycles
+    for (auto& edge : edges) {
+        int u = get<0>(edge), v = get<1>(edge), wt = get<2>(edge);
         if (dist[u] != INT_MAX && dist[u] + wt < dist[v]) {
             cout << "A negative-weight cycle exists in the graph.\n";
             return;
@@ -73,7 +71,6 @@ void bellman(int V, int E, vector<BellmanEdge>& edges, int source) {
     }
 }
 
-// ---------- Main ----------
 int main() {
     int V, E, choice;
     cout << "Enter number of vertices and edges: ";
@@ -82,28 +79,22 @@ int main() {
     cout << "Choose algorithm:\n1. Dijkstra's\n2. Bellman-Ford\n";
     cin >> choice;
 
+    vector<vector<pair<int, int>>> adj(V);
+    cout << "Enter each edge as: from to weight\n";
+    for (int i = 0; i < E; ++i) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        adj[u].emplace_back(v, w);
+    }
+
+    int source;
+    cout << "Enter source node: ";
+    cin >> source;
+
     if (choice == 1) {
-        vector<vector<DijkstraEdge>> graph(V);
-        cout << "Enter each edge as: from to weight (non-negative weights only)\n";
-        for (int i = 0; i < E; ++i) {
-            int u, v, w;
-            cin >> u >> v >> w;
-            graph[u].push_back({v, w});
-        }
-        int source;
-        cout << "Enter source node: ";
-        cin >> source;
-        dijkstra(source, graph);
+        dijkstra(source, adj);
     } else if (choice == 2) {
-        vector<BellmanEdge> edges(E);
-        cout << "Enter each edge as: from to weight (can be negative)\n";
-        for (int i = 0; i < E; ++i) {
-            cin >> edges[i].u >> edges[i].v >> edges[i].wt;
-        }
-        int source;
-        cout << "Enter source node: ";
-        cin >> source;
-        bellman(V, E, edges, source);
+        bellman(V, adj, source);
     } else {
         cout << "Invalid choice!\n";
     }
