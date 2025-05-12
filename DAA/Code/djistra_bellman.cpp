@@ -1,26 +1,25 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void dijkstra(int start, const vector<vector<pair<int, int>>>& adj) {
+void dijkstra(int start, const vector<vector<pair<int, int>>> adj) {
     int n = adj.size();
     vector<int> dist(n, INT_MAX);
     dist[start] = 0;
 
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
-    pq.push({0, start});
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push(make_pair(0, start));
 
     while (!pq.empty()) {
         int d = pq.top().first;
         int u = pq.top().second;
         pq.pop();
 
-        if (d > dist[u]) continue;
-
-        for (auto& edge : adj[u]) {
-            int v = edge.first, weight = edge.second;
+        for (const pair<int, int> edge : adj[u]) {
+            int v = edge.first;
+            int weight = edge.second;
             if (dist[u] + weight < dist[v]) {
                 dist[v] = dist[u] + weight;
-                pq.push({dist[v], v});
+                pq.push(make_pair(dist[v], v));
             }
         }
     }
@@ -33,30 +32,35 @@ void dijkstra(int start, const vector<vector<pair<int, int>>>& adj) {
     }
 }
 
-void bellman(int V, const vector<vector<pair<int, int>>>& adj, int source) {
+void bellman(int V, const vector<vector<pair<int, int>>> adj, int source) {
     vector<int> dist(V, INT_MAX);
     dist[source] = 0;
 
-    // Flatten the adjacency list into edges
+    //just make the tuple
     vector<tuple<int, int, int>> edges;
     for (int u = 0; u < V; ++u) {
-        for (auto& edge : adj[u]) {
-            edges.emplace_back(u, edge.first, edge.second);
+        for (int i = 0; i < adj[u].size(); ++i) {
+            int v = adj[u][i].first;
+            int w = adj[u][i].second;
+            edges.push_back(make_tuple(u, v, w));
         }
     }
 
     for (int i = 0; i < V - 1; ++i) {
-        for (auto& edge : edges) {
-            int u = get<0>(edge), v = get<1>(edge), wt = get<2>(edge);
+        for (int j = 0; j < edges.size(); ++j) {
+            int u = get<0>(edges[j]);
+            int v = get<1>(edges[j]);
+            int wt = get<2>(edges[j]);
             if (dist[u] != INT_MAX && dist[u] + wt < dist[v]) {
                 dist[v] = dist[u] + wt;
             }
         }
     }
 
-    // Check for negative cycles
-    for (auto& edge : edges) {
-        int u = get<0>(edge), v = get<1>(edge), wt = get<2>(edge);
+    for (int j = 0; j < edges.size(); ++j) {
+        int u = get<0>(edges[j]);
+        int v = get<1>(edges[j]);
+        int wt = get<2>(edges[j]);
         if (dist[u] != INT_MAX && dist[u] + wt < dist[v]) {
             cout << "A negative-weight cycle exists in the graph.\n";
             return;
@@ -84,7 +88,7 @@ int main() {
     for (int i = 0; i < E; ++i) {
         int u, v, w;
         cin >> u >> v >> w;
-        adj[u].emplace_back(v, w);
+        adj[u].push_back(make_pair(v, w));
     }
 
     int source;

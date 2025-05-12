@@ -8,9 +8,6 @@ void sumSubset(int set[],int n,int Setindex,int currSum, int target,int sol[],in
         cout << "[";
         for(int i =0;i<solIndex;i++){
             cout << sol[i];
-            
-            //just to look nice, ignore
-            //if(i < solIndex-1) cout<<",";
         }
         cout << "]\n";
         found = 1;

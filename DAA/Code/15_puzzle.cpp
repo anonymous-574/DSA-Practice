@@ -1,112 +1,114 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <queue>
+
 using namespace std;
 
-const int GRID_SIZE = 4;
-const int dirRow[4] = { -1, 0, 1, 0 };
-const int dirCol[4] = { 0, 1, 0, -1 };
+const int N = 4;
 
-int countMisplacedTiles(const vector<vector<int>>& current, const vector<vector<int>>& goal) {
-    int misplaced = 0;
-    for (int row = 0; row < GRID_SIZE; ++row)
-        for (int col = 0; col < GRID_SIZE; ++col)
-            if (current[row][col] != 0 && current[row][col] != goal[row][col])
-                misplaced++;
-    return misplaced;
-}
+vector<vector<int>> goal = {
+    {1, 2, 3, 4},
+    {5, 6, 7, 8},
+    {9, 10, 11, 12},
+    {13, 14, 15, 0}
+};
 
-void printBoard(const vector<vector<int>>& board) {
-    for (int row = 0; row < GRID_SIZE; ++row) {
-        for (int col = 0; col < GRID_SIZE; ++col)
-            cout << setw(2) << board[row][col] << ' ';
+int dx[4] = {0, 1, 0, -1};
+int dy[4] = {-1, 0, 1, 0};
+
+struct State {
+    vector<vector<int>> mat;
+    int x, y; // Position of blank tile
+    int costFromStart; // g(n)
+    int estimatedTotalCost; // f(n) = g(n) + h(n)
+
+    bool operator>(const State& other) const {
+        return estimatedTotalCost > other.estimatedTotalCost;
+    }
+};
+
+void printPuzzle(const vector<vector<int>>& mat) {
+    for (const auto& row : mat) {
+        for (int val : row)
+            cout << val << "\t";
         cout << "\n";
     }
 }
 
-void solvePuzzle(const vector<vector<int>>& startBoard, const vector<vector<int>>& goalBoard) {
-    vector<vector<int>> currentBoard = startBoard;
-    vector<vector<int>> previousBoard = startBoard;
+bool isSafe(int x, int y) {
+    return x >= 0 && x < N && y >= 0 && y < N;
+}
 
-    int blankRowIdx = -1, blankColIdx = -1;
-    for (int i = 0; i < GRID_SIZE; i++)
-        for (int j = 0; j < GRID_SIZE; j++)
-            if (currentBoard[i][j] == 0) {
-                blankRowIdx = i;
-                blankColIdx = j;
+// Heuristic: number of misplaced tiles
+int countMisplacedTiles(const vector<vector<int>>& mat) {
+    int cost = 0;
+    for (int i = 0; i < N; ++i)
+        for (int j = 0; j < N; ++j)
+            if (mat[i][j] != 0 && mat[i][j] != goal[i][j])
+                cost++;
+    return cost;
+}
+
+State getInitialState() {
+    vector<vector<int>> start(N, vector<int>(N));
+    int startX = -1, startY = -1;
+
+    cout << "Enter the 4x4 puzzle (use 0 for blank tile):\n";
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            cin >> start[i][j];
+            if (start[i][j] == 0) {
+                startX = i;
+                startY = j;
             }
-
-    int costSoFar = 0;
-    int heuristicValue = countMisplacedTiles(currentBoard, goalBoard);
-
-    cout << "Level 0 (Start State):\n";
-    cout << "Cost = " << costSoFar + heuristicValue << "  (g=" << costSoFar << ", h=" << heuristicValue << ")\n";
-    printBoard(currentBoard);
-    cout << "---------------------\n";
-
-    int steps = 0;
-    while (heuristicValue != 0) {
-        struct Candidate {
-            vector<vector<int>> board;
-            int totalCost, heuristic, cost;
-            int blankRow, blankCol;
-        };
-
-        vector<Candidate> candidates;
-
-        for (int d = 0; d < 4; d++) {
-            int newRow = blankRowIdx + dirRow[d];
-            int newCol = blankColIdx + dirCol[d];
-            if (newRow < 0 || newRow >= GRID_SIZE || newCol < 0 || newCol >= GRID_SIZE)
-                continue;
-
-            vector<vector<int>> newBoard = currentBoard;
-            swap(newBoard[blankRowIdx][blankColIdx], newBoard[newRow][newCol]);
-            if (newBoard == previousBoard)
-                continue;
-
-            int newHeuristic = countMisplacedTiles(newBoard, goalBoard);
-            candidates.push_back({ newBoard, costSoFar + 1 + newHeuristic, newHeuristic, costSoFar + 1, newRow, newCol });
         }
+    }
 
-        if (candidates.empty()) {
-            cout << "No further moves possible. Stuck.\n";
+    State init;
+    init.mat = start;
+    init.x = startX;
+    init.y = startY;
+    init.costFromStart = 0;
+    init.estimatedTotalCost = countMisplacedTiles(start);
+    return init;
+}
+
+void solvePuzzle(const State& initialState) {
+    priority_queue<State, vector<State>, greater<State>> openSet;
+    openSet.push(initialState);
+
+    while (!openSet.empty()) {
+        State current = openSet.top();
+        openSet.pop();
+
+        if (countMisplacedTiles(current.mat) == 0) {
+            cout << "\nSolved Puzzle:\n";
+            printPuzzle(current.mat);
+            cout << "Total steps: " << current.costFromStart << "\n";
             return;
         }
 
-        auto best = *min_element(candidates.begin(), candidates.end(), [](auto& a, auto& b) {
-            return tie(a.totalCost, a.heuristic) < tie(b.totalCost, b.heuristic);
-        });
+        for (int i = 0; i < 4; ++i) {
+            int newX = current.x + dx[i];
+            int newY = current.y + dy[i];
 
-        previousBoard = currentBoard;
-        currentBoard = best.board;
-        blankRowIdx = best.blankRow;
-        blankColIdx = best.blankCol;
-        costSoFar = best.cost;
-        heuristicValue = best.heuristic;
-        steps++;
-
-        cout << "Level " << steps << ":\n";
-        cout << "Cost = " << best.totalCost << "  (g=" << costSoFar << ", h=" << heuristicValue << ")\n";
-        printBoard(currentBoard);
-        cout << "---------------------\n";
+            if (isSafe(newX, newY)) {
+                State nextState = current;
+                swap(nextState.mat[current.x][current.y], nextState.mat[newX][newY]);
+                nextState.x = newX;
+                nextState.y = newY;
+                nextState.costFromStart = current.costFromStart ++;
+                nextState.estimatedTotalCost = nextState.costFromStart + countMisplacedTiles(nextState.mat);
+                openSet.push(nextState);
+            }
+        }
     }
 
-    cout << "Reached goal in " << steps << " steps.\n";
+    cout << "No solution found.\n";
 }
 
 int main() {
-    vector<vector<int>> startBoard(GRID_SIZE, vector<int>(GRID_SIZE));
-    vector<vector<int>> goalBoard(GRID_SIZE, vector<int>(GRID_SIZE));
-
-    cout << "Enter initial 4x4 board (0 = blank):\n";
-    for (int i = 0; i < GRID_SIZE; i++)
-        for (int j = 0; j < GRID_SIZE; j++)
-            cin >> startBoard[i][j];
-
-    cout << "Enter goal 4x4 board (0 = blank):\n";
-    for (int i = 0; i < GRID_SIZE; i++)
-        for (int j = 0; j < GRID_SIZE; j++)
-            cin >> goalBoard[i][j];
-
-    solvePuzzle(startBoard, goalBoard);
+    State initialState = getInitialState();
+    solvePuzzle(initialState);
     return 0;
 }

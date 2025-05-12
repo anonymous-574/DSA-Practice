@@ -3,7 +3,7 @@ using namespace std;
 
 void printOptimalParens(vector<vector<int>> &s, int i, int j) {
     if (i == j) {
-        cout << "A" << i + 1;
+        cout << "M" << i + 1;
     } else {
         cout << "(";
         printOptimalParens(s, i, s[i][j]);
@@ -31,9 +31,15 @@ void matrixChainOrder(int n, int dim[]) {
     vector<vector<int>> s(n, vector<int>(n, 0));
 
     // Initialize diagonal as 0 and others as INF
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            m[i][j] = (i == j) ? 0 : INT_MAX;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i == j)
+                m[i][j] = 0;
+            else
+                m[i][j] = INT_MAX;
+        }
+    }
+
 
     for (int l = 2; l <= n; l++) {
         for (int i = 0; i < n - l + 1; i++) {
