@@ -14,20 +14,28 @@ void prim(int start, vector<vector<pair<int, int>>> &graph) {
     int totalWeight = 0;
 
     while (!pq.empty()) {
-        int u = pq.top().second; pq.pop();
-        if (inMST[u]) continue;
+        int u = pq.top().second;
+        pq.pop();
+
+        if (inMST[u])
+            continue;
+
         inMST[u] = true;
         totalWeight += key[u];
 
-        for (const auto &e : graph[u]) {
-            int v = e.first, weight = e.second;
+        // Traverse all adjacent vertices of u
+        for (int i = 0; i < graph[u].size(); ++i) {
+            int v = graph[u][i].first;
+            int weight = graph[u][i].second;
+
             if (!inMST[v] && weight < key[v]) {
                 key[v] = weight;
                 parent[v] = u;
-                pq.push({key[v], v});
+                pq.push(make_pair(key[v], v));
             }
         }
     }
+
 
     cout << "\nEdges in the MST (Prim's):\n";
     for (int v = 0; v < n; ++v) {
@@ -38,50 +46,49 @@ void prim(int start, vector<vector<pair<int, int>>> &graph) {
 }
 
 // ---------- For Kruskal's ----------
+// Compare edges by weight
 bool cmp(const tuple<int, int, int>& a, const tuple<int, int, int>& b) {
-    return get<2>(a) < get<2>(b); // Compare based on the weight
-}
-
-int findSet(int parent[], int x) {
-    if (parent[x] != x)
-        parent[x] = findSet(parent, parent[x]);
-    return parent[x];
-}
-
-void unionSet(int parent[], int rank[], int x, int y) {
-    int rootX = findSet(parent, x);
-    int rootY = findSet(parent, y);
-    if (rootX != rootY) {
-        if (rank[rootX] < rank[rootY]) parent[rootX] = rootY;
-        else if (rank[rootX] > rank[rootY]) parent[rootY] = rootX;
-        else {
-            parent[rootY] = rootX;
-            rank[rootX]++;
-        }
-    }
+    return get<2>(a) < get<2>(b);
 }
 
 void kruskal(int V, vector<tuple<int, int, int>>& edges) {
-    int parent[V], rank[V];
+    unordered_map<int, int> component;
+
+    // Initially, each vertex is in its own component
     for (int i = 0; i < V; i++) {
-        parent[i] = i;
-        rank[i] = 0;
+        component[i] = i;
     }
 
     sort(edges.begin(), edges.end(), cmp);
-    int mstWeight = 0, edgeUsed = 0;
 
-    cout << "\nEdges in the MST (Kruskal's):\n";
-    for (auto &e : edges) {
+    int mstWeight = 0;
+    int edgeUsed = 0;
+
+    cout << "\nEdges in the MST (Kruskal's without DSU using unordered_map):\n";
+    for (int i = 0; i < edges.size(); i++) {
         if (edgeUsed == V - 1) break;
-        int u = get<0>(e), v = get<1>(e), w = get<2>(e);
-        if (findSet(parent, u) != findSet(parent, v)) {
-            unionSet(parent, rank, u, v);
+
+        int u = get<0>(edges[i]);
+        int v = get<1>(edges[i]);
+        int w = get<2>(edges[i]);
+
+        if (component[u] != component[v]) {
+            int oldComp = component[v];
+            int newComp = component[u];
+
+            // Merge all vertices from oldComp to newComp
+            for (unordered_map<int, int>::iterator it = component.begin(); it != component.end(); ++it) {
+                if (it->second == oldComp) {
+                    it->second = newComp;
+                }
+            }
+
             cout << u << " - " << v << " (Weight: " << w << ")\n";
             mstWeight += w;
             edgeUsed++;
         }
     }
+
     cout << "Total weight of MST: " << mstWeight << endl;
 }
 
