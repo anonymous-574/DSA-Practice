@@ -12,6 +12,7 @@ int orientation(Point p, Point q, Point r) {
     return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
 }
 
+//return based on x coordinate , else y coordinate
 bool comparePoints(const Point& a, const Point& b) {
     return (a.x < b.x) || (a.x == b.x && a.y < b.y);
 }
@@ -52,7 +53,7 @@ vector<Point> divideAndConquer(Point points[], int n) {
 
     // Combine both hulls into one array
     vector<Point> combined = leftHull;
-    for (size_t i = 0; i < rightHull.size(); ++i) {
+    for (int i = 0; i < rightHull.size(); ++i) {
         combined.push_back(rightHull[i]);
     }
 
@@ -75,7 +76,7 @@ int main() {
     vector<Point> convexHull = divideAndConquer(points, n);
 
     cout << "Divide and Conquer Convex Hull:\n";
-    for (size_t i = 0; i < convexHull.size(); ++i) {
+    for (int i = 0; i < convexHull.size(); ++i) {
         cout << "(" << convexHull[i].x << ", " << convexHull[i].y << ")\n";
     }
 
