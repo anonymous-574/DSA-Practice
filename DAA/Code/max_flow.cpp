@@ -1,152 +1,125 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <climits>
+#include <vector>
+#include <queue>
+
 using namespace std;
 
-const int INF = 1e9;
-
-vector<vector<int>> flow, residual, capacity;
-
-// Utility to print shortest path
-void printPath(vector<int>& parent, int v) {
-    if (parent[v] == -1) {
-        cout << v << " ";
-        return;
-    }
-    printPath(parent, parent[v]);
-    cout << v << " ";
-}
-
-// Bellman-Ford for shortest paths from source
-void bellmanFord(int V, vector<vector<int>>& adj, int src) {
-    vector<int> dist(V, INF);
-    vector<int> parent(V, -1);
-    dist[src] = 0;
-
-    vector<tuple<int, int, int>> edges;
-    for (int u = 0; u < V; u++) {
-        for (int v = 0; v < V; v++) {
-            if (adj[u][v] != INF) {
-                edges.push_back(make_tuple(u, v, adj[u][v]));
-            }
-        }
-    }
-
-    for (int i = 0; i < V - 1; i++) {
-        for (int j = 0; j < edges.size(); j++) {
-            int u, v, weight;
-            tie(u, v, weight) = edges[j];
-            if (dist[u] != INF && dist[u] + weight < dist[v]) {
-                dist[v] = dist[u] + weight;
+bool dfs(vector<vector<int>> &resGraph, int u, int t, vector<bool> &visited, vector<int> &parent) {
+	
+	visited[u] = true;
+	if(u == t) 
+		return true;
+	
+	int n = resGraph.size();
+	for (int v = 0; v < n; v++) {
+            if (!visited[v] && resGraph[u][v] > 0) {
                 parent[v] = u;
+                if (dfs(resGraph, v, t, visited, parent))
+                    return true;
             }
-        }
-    }
+     }
+	
+	return false;
 
-    for (int j = 0; j < edges.size(); j++) {
-        int u, v, weight;
-        tie(u, v, weight) = edges[j];
-        if (dist[u] != INF && dist[u] + weight < dist[v]) {
-            cout << "Algorithm Used: Bellman-Ford\n";
-            cout << "Graph contains a negative weight cycle\n";
-            return;
-        }
-    }
-
-    cout << "\nAlgorithm Used: Bellman-Ford\n";
-    cout << "Bellman-Ford Shortest Paths from Node " << src << ":\n";
-    for (int i = 0; i < V; i++) {
-        cout << "Node " << i << " Distance: " << (dist[i] == INF ? -1 : dist[i]) << " Path: ";
-        if (dist[i] != INF) printPath(parent, i);
-        cout << "\n";
-    }
 }
 
-// DFS for augmenting path (Ford-Fulkerson)
-int dfs(int V, int s, int t, vector<int>& visited, vector<int>& parent) {
-    if (s == t) return 1;
-    visited[s] = 1;
-    for (int i = 0; i < V; i++) {
-        if (!visited[i] && residual[s][i] > 0) {
-            parent[i] = s;
-            if (dfs(V, i, t, visited, parent)) return 1;
-        }
-    }
-    return 0;
-}
-
-// Ford-Fulkerson algorithm (Max Flow)
-void Ford_Fulkerson(int V, int s, int t) {
-    flow.assign(V, vector<int>(V, 0));
-    int maxFlow = 0;
+int flow_dfs(vector<vector<int>> &g, int s, int t) {
+    int n = g.size();
+    vector<vector<int>> resGraph = g;
+    vector<int> parent(n);
+    int max_flow = 0;
 
     while (true) {
-        vector<int> visited(V, 0);
-        vector<int> parent(V, -1);
-        if (!dfs(V, s, t, visited, parent)) break;
+        vector<bool> visited(n, false);
+        fill(parent.begin(), parent.end(), -1);
+
+        if (!dfs(resGraph, s, t, visited, parent))
+            break;
 
         int path_flow = INT_MAX;
-        int v = t;
-        while (v != s) {
+        for (int v = t; v != s; v = parent[v]) {
             int u = parent[v];
-            path_flow = min(path_flow, residual[u][v]);
-            v = u;
+            path_flow = min(path_flow, resGraph[u][v]);
         }
 
-        cout << "\nAugmenting path (from sink to source): ";
-        v = t;
-        while (v != s) {
-            cout << v << " <- ";
-            v = parent[v];
-        }
-        cout << s << "\n";
-        cout << "Bottleneck capacity = " << path_flow << "\n";
-
-        v = t;
-        cout << "Updated flow on edges in the path:\n";
-        while (v != s) {
+        for (int v = t; v != s; v = parent[v]) {
             int u = parent[v];
-            if (capacity[u][v] > 0) flow[u][v] += path_flow;
-            else flow[v][u] -= path_flow;
-            residual[u][v] -= path_flow;
-            residual[v][u] += path_flow;
-            cout << " Edge (" << u << " -> " << v << "): flow = " << flow[u][v] << " / capacity = " << capacity[u][v] << "\n";
-            v = u;
+            resGraph[u][v] -= path_flow;
+            resGraph[v][u] += path_flow;
         }
 
-        maxFlow += path_flow;
+        max_flow += path_flow;
     }
 
-    cout << "\nNo more augmenting paths. Maximum Flow = " << maxFlow << "\n";
-    cout << "\nFinal flows (u -> v):\n";
-    for (int u = 0; u < V; u++)
-        for (int v = 0; v < V; v++)
-            if (capacity[u][v])
-                cout << "(" << u << " -> " << v << "): " << flow[u][v] << " / " << capacity[u][v] << "\n";
+    return max_flow;
+}
+
+
+
+
+bool bfs(vector<vector<int>> &resGraph, int s, int t, vector<int> &parent) {
+    int n = resGraph.size();
+    vector<bool> visited(n, false);
+    queue<int> q;
+
+    q.push(s);
+    visited[s] = true;
+    parent[s] = -1;
+
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+
+        for (int v = 0; v < n; v++) {
+            if (!visited[v] && resGraph[u][v] > 0) {
+                q.push(v);
+                parent[v] = u;
+                visited[v] = true;
+                if (v == t)
+                    return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+int flow(vector<vector<int>> &g, int s, int t) {
+    int n = g.size();
+    vector<vector<int>> resGraph = g;
+    vector<int> parent(n);
+    int max_flow = 0;
+
+    while (bfs(resGraph, s, t, parent)) {
+        int path_flow = INT_MAX;
+
+        for (int v = t; v != s; v = parent[v]) {
+            int u = parent[v];
+            path_flow = min(path_flow, resGraph[u][v]);
+        }
+
+        for (int v = t; v != s; v = parent[v]) {
+            int u = parent[v];
+            resGraph[u][v] -= path_flow;
+            resGraph[v][u] += path_flow;
+        }
+
+        max_flow += path_flow;
+    }
+
+    return max_flow;
 }
 
 int main() {
-    int V, E;
-    cout << "Vertices and Edges: ";
-    cin >> V >> E;
+    vector<vector<int>> graph = {
+        { 0, 16, 13, 0, 0, 0 },
+        { 0, 0, 10, 12, 0, 0 },
+        { 0, 4, 0, 0, 14, 0 },
+        { 0, 0, 9, 0, 0, 20 },
+        { 0, 0, 0, 7, 0, 4 },
+        { 0, 0, 0, 0, 0, 0 }
+    };
 
-    capacity.assign(V, vector<int>(V, 0));
-    vector<vector<int>> adj(V, vector<int>(V, INF));
-
-    cout << "Edges (format: u v capacity):\n";
-    for (int i = 0; i < E; i++) {
-        int u, v, cap;
-        cin >> u >> v >> cap;
-        capacity[u][v] = cap;
-        adj[u][v] = cap; // for Bellman-Ford
-    }
-
-    residual = capacity;
-
-    int s, t;
-    cout << "Source and Sink: ";
-    cin >> s >> t;
-
-    Ford_Fulkerson(V, s, t);
-    bellmanFord(V, adj, s);
-
-    return 0;
+    cout << "The maximum possible flow is " << flow_dfs(graph, 0, 5) << endl;
 }
